@@ -38,18 +38,21 @@ $(document).ready(function () {
   }
 
   function loadResults (data, source) {
-    console.log(data, source);
     for (var i = 0; i < RESULTS_LIMIT; i++) {
+      // create html elements to append to page
       var url = data[3][i];
       var row = $('<div>').addClass('row');
       var a = $('<a>').attr('href', url);
       var col = $('<div>').addClass('col-sm-12 result-card');
-      var title = $('<h4>').text(data[1][i]);
-      var excerpt = $('<p>').text(data[2][i]);
+      var title = $('<h4>').text(data[1][i] + ' ');
+      var excerpt = $('<p>').text(data[2][i] + ' ');
+      var glyphicon = $('<span>').addClass('glyphicon glyphicon-copy');
 
-      col.append(title, excerpt);
-      a.append(col);
-      row.append(a);
+      // append elements from child to parent, then to page
+      title.append(glyphicon);
+      a.append(excerpt);
+      col.append(title, a);
+      row.append(col);
       $('#wikipedia').append(row);
     }
     // create div class row
