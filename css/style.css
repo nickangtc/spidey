@@ -26,8 +26,13 @@ hr {
   /* offset-x | offset-y | blur-radius | spread-radius | color */
   box-shadow: 1px 15px 25px 1px rgba(0, 0, 0, 0.1), -1px 15px 25px 1px rgba(0, 0, 0, 0.1);
 }
-.result-card:hover {
-  /* offset-x | offset-y | blur-radius | spread-radius | color */
-  /*box-shadow: 1px 4px 30px 2px rgba(0, 0, 0, 0.2), -1px 5px 30px 2px rgba(0, 0, 0, 0.2);*/
-  /*box-shadow: 1px 18px 25px 1px rgba(0, 0, 0, 0.1), -1px 18px 25px 1px rgba(0, 0, 0, 0.1);*/
+
+/* ==== MISCELLANEOUS CSS ==== */
+/* offset fixed navbar height for in-page anchor tag jumps */
+/* https://www.itsupportguides.com/tech-tips-tricks/how-to-offset-anchor-tag-link-using-css/ */
+:target:before {
+content:"";
+display:block;
+height:70px; /* fixed header height*/
+margin:-70px 0 0; /* negative fixed header height */
 }
