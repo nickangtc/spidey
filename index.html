@@ -13,7 +13,7 @@
   </head>
 
   <body>
-    <!-- Navbar -->
+    <!-- ============= Navbar ============== -->
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -24,6 +24,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
+          <!-- Logo -->
           <a href="#" class="navbar-brand">Spidey</a>
         </div>
 
@@ -32,7 +33,7 @@
           <ul class="nav navbar-nav">
             <!-- What is 'sr-only'? -->
             <li class="active">
-              <a href="#">Wikipedia <span class="sr-only">(current)</span></a>
+              <a href="#wikipedia">Wikipedia <span class="sr-only">(current)</span></a>
             </li>
             <li><a href="#">Google</a></li>
             <li><a href="#">News</a></li>
@@ -41,7 +42,7 @@
           <!-- HEADS UP: form role="search" might be redundant -->
           <form class="navbar-form navbar-right" role="search">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Ask Spidey">
+              <input type="text" class="form-control" placeholder="Spidey Search">
               <button class="btn btn-default" type="submit">Submit</button>
             </div>
           </form>
@@ -53,6 +54,31 @@
         </div><!-- /.navbar-collapse> -->
       </div><!-- /.container-fluid -->
     </nav>
+
+    <!-- =============== Results =================== -->
+    <div class="container">
+      <!-- Search term message display -->
+      <div class="row text-center">
+        <h4>Search: <span id="search-term">lorem ipsum</span></h4>
+      </div>
+
+      <!-- ========= Results display stage ============ -->
+      <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+          <h3 id="wikipedia">Wikipedia</h3>
+          <div class="row" id="wiki-results">
+            <div class="col-sm-12 result-card">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+            <div class="col-sm-12 result-card">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+            <div class="col-sm-12 result-card">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+            <div class="col-sm-12 result-card">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+            <div class="col-sm-12 result-card">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
 
   </body>
 </html>
