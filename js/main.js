@@ -42,16 +42,18 @@ $(document).ready(function () {
 
   // Format GET response, append to page
   function loadResults (data, source) {
+    $('#wikipedia .row').empty();
+    var moreResults = data[1].length - RESULTS_LIMIT;
     for (var i = 0; i < RESULTS_LIMIT; i++) {
       // create html elements before appending to page
       var url = data[3][i];
+      var hidden = $('<p>').text('show ' + moreResults + ' more results...');
 
       var row = $('<div>').addClass('row');
       var a = $('<a>').attr('href', url);
       var col = $('<div>').addClass('col-sm-12 result-card');
       var title = $('<h4>').text(data[1][i] + ' ');
       var excerpt = $('<p>').text(data[2][i] + ' ');
-
 
       var inputGroup = $('<div>').addClass('input-group input-group-sm copy-url');
       var input = $('<input>').attr({
@@ -63,16 +65,17 @@ $(document).ready(function () {
       var starBtn = $('<button>').attr('type', 'button').addClass('btn btn-default');
       var glyphicon = $('<span>').addClass('glyphicon glyphicon-star-empty');
 
-      // append elements from child to parent, then to page
-      a.append(excerpt);
-      // copy url interface at bottom
+      // append card elements from child to parent, then to page
+      a.append(title, excerpt);
+      // copy-url interface at bottom of card
       starBtn.append(glyphicon);
       inputStar.append(starBtn);
       inputGroup.append(input, inputStar);
-      // content above
-      col.append(title, a, inputGroup);
+      // content of card
+      col.append(a, inputGroup);
       row.append(col);
       $('#wikipedia').append(row);
     }
+    $('#wikipedia').append(hidden);
   }
 });

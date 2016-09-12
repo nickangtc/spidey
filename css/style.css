@@ -9,6 +9,9 @@ body {
 hr {
   border-color: black;
 }
+a:hover {
+  text-decoration: none;
+}
 
 #search-term {
   text-decoration: underline;
@@ -34,9 +37,7 @@ hr {
 .copy-url {
   width: 60%;
 }
-.star-icon {
-  padding-left: 20px;
-}
+
 
 
 /* BOOTSTRAP MODS */
