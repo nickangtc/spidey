@@ -28,7 +28,6 @@ $(document).ready(function () {
     if (source === 'wikipedia') {
       url = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=';
     }
-    console.log('url', url, 'source', source, 'searchstr', SEARCH_STR);
 
     $.ajax({
       url: url + SEARCH_STR,
@@ -42,19 +41,36 @@ $(document).ready(function () {
 
   // Format GET response, append to page
   function loadResults (data, source) {
-    $('#wikipedia .row').empty();
-    var moreResults = data[1].length - RESULTS_LIMIT;
-    for (var i = 0; i < RESULTS_LIMIT; i++) {
-      // create html elements before appending to page
-      var url = data[3][i];
-      var hidden = $('<p>').text('show ' + moreResults + ' more results...');
+    // remove previous search results
+    $('#wikipedia .row').remove(); // every result card
+    $('#wikipedia p').remove(); // 'show x more results...'
+    var numOfResults = data[1].length;
+    var numOfCards = numOfResults;
 
+    // always display all results, unless RESULTS_LIMIT < num of results
+    if (numOfResults >= RESULTS_LIMIT) {
+      numOfCards = RESULTS_LIMIT;
+    }
+
+    for (var i = 0; i < numOfCards; i++) {
+      var url = data[3][i];
+
+      // create html elements before appending to page
+      // elements for results content
       var row = $('<div>').addClass('row');
-      var a = $('<a>').attr('href', url);
       var col = $('<div>').addClass('col-sm-12 result-card');
       var title = $('<h4>').text(data[1][i] + ' ');
       var excerpt = $('<p>').text(data[2][i] + ' ');
 
+      // when clicked launches Modal with relevant iframe
+      var a = $('<a>').attr({
+        'url': url, // hidden, value is set as iframe 'src' when modal is triggered
+        'data-toggle': 'modal',
+        'data-target': '.iframe-modal-lg',
+        'class': 'modal-trigger'
+      });
+
+      // elements for URL copy field
       var inputGroup = $('<div>').addClass('input-group input-group-sm copy-url');
       var input = $('<input>').attr({
         onclick: 'this.select();',
@@ -67,15 +83,32 @@ $(document).ready(function () {
 
       // append card elements from child to parent, then to page
       a.append(title, excerpt);
-      // copy-url interface at bottom of card
       starBtn.append(glyphicon);
       inputStar.append(starBtn);
       inputGroup.append(input, inputStar);
-      // content of card
       col.append(a, inputGroup);
       row.append(col);
+      // append card to page
       $('#wikipedia').append(row);
     }
-    $('#wikipedia').append(hidden);
+
+    // display 'show x more results...' if applicable
+    if (numOfResults > RESULTS_LIMIT) {
+      var moreResults = numOfResults - RESULTS_LIMIT;
+      var hidden = $('<p>').text('show ' + moreResults + ' more results...');
+      $('#wikipedia').append(hidden);
+    }
+
+    // ============= Modal click handler ==============
+    // index.html contains modal with embedded iframe
+    // main.js sets relevant 'src' of iframe when result card is clicked
+    $('.modal-trigger').on('click', function (ev) {
+      // url is obtained from 'url' attr of <a>
+      var url = ev.currentTarget.attributes[0].value;
+      // prevent re-load of the same content in modal
+      if ($('iframe').attr('src') !== url) {
+        $('iframe').attr('src', url);
+      }
+    });
   }
 });
