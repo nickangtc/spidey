@@ -1,5 +1,7 @@
 /* global $ */
 
+// TODO: add click handler for star button to save to user account
+
 console.log('javascript working');
 
 $(document).ready(function () {
@@ -20,6 +22,7 @@ $(document).ready(function () {
   });
 
   // ========== Functions ===========
+  // Send AJAX GET requests
   function getJSON (dataType, source) {
     var url = '';
     if (source === 'wikipedia') {
@@ -37,29 +40,39 @@ $(document).ready(function () {
     });
   }
 
+  // Format GET response, append to page
   function loadResults (data, source) {
     for (var i = 0; i < RESULTS_LIMIT; i++) {
-      // create html elements to append to page
+      // create html elements before appending to page
       var url = data[3][i];
+
       var row = $('<div>').addClass('row');
       var a = $('<a>').attr('href', url);
       var col = $('<div>').addClass('col-sm-12 result-card');
       var title = $('<h4>').text(data[1][i] + ' ');
       var excerpt = $('<p>').text(data[2][i] + ' ');
-      var glyphicon = $('<span>').addClass('glyphicon glyphicon-copy');
+
+
+      var inputGroup = $('<div>').addClass('input-group input-group-sm copy-url');
+      var input = $('<input>').attr({
+        onclick: 'this.select();',
+        type: 'text',
+        value: url
+      }).addClass('form-control');
+      var inputStar = $('<span>').addClass('input-group-btn');
+      var starBtn = $('<button>').attr('type', 'button').addClass('btn btn-default');
+      var glyphicon = $('<span>').addClass('glyphicon glyphicon-star-empty');
 
       // append elements from child to parent, then to page
-      title.append(glyphicon);
       a.append(excerpt);
-      col.append(title, a);
+      // copy url interface at bottom
+      starBtn.append(glyphicon);
+      inputStar.append(starBtn);
+      inputGroup.append(input, inputStar);
+      // content above
+      col.append(title, a, inputGroup);
       row.append(col);
       $('#wikipedia').append(row);
     }
-    // create div class row
-    // create and append to div: a href "wiki URL"
-    // create and append to a: div class col-sm-12 result-card
-    // create and append to div: h4 for title, p for excerpt
-    // append to $('#wikipedia')
-
   }
 });

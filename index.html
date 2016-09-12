@@ -97,7 +97,16 @@
             <p id="excerpt">
               Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </p>
-            <input onclick="this.select();" type="text" class="form-control input-sm" value="https://en.wikipedia.org/w/api.php?action=opensearch&search=beatles">
+            <!-- ======================== TRY ADDING COL TO FORCE SIZE OF INPUT, AND TO ALIGN 'STAR' BUTTON NEXT TO IT=========== -->
+
+            <!-- <input onclick="this.select();" type="text" class="form-control input-sm copy-url" value="https://en.wikipedia.org/w/api.php?action=opensearch&search=beatles">
+            <span class="glyphicon glyphicon-star-empty star-icon"></span> -->
+            <div class="input-group input-group-sm copy-url">
+              <input onclick="this.select();" type="text" class="form-control" value="https://en.wikipedia.org/w/api.php?action=opensearch&search=beatles">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-star-empty"></span></button>
+              </span>
+            </div><!-- /input-group -->
           </div>
           <div class="col-sm-12 result-card">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
