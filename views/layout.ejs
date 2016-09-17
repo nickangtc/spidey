@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>layout.ejs</title>
+    <!-- External libraries -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery-3.1.0.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Custom -->
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/main.js"></script>
+  </head>
+  <body>
+    <!-- ============= Navbar ============== -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <!-- 3 icon-bars = 1 hamburger icon -->
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- Logo -->
+          <a href="#" class="navbar-brand">Spidey</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+          <!-- navbar left -->
+          <ul class="nav navbar-nav">
+            <!-- What is 'sr-only'? -->
+            <!-- TODO: write javascript to toggle "active" class between nav links -->
+            <li class="active">
+              <a href="#wikipedia">Wikipedia <span class="sr-only">(current)</span></a>
+            </li>
+            <li><a href="#google">Google</a></li>
+            <li><a href="#">News</a></li>
+          </ul>
+          <!-- navbar right -->
+          <!-- TODO: form role="search" might be redundant -->
+          <form class="navbar-form navbar-right" role="search">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Spidey Search">
+              <button id="submit-btn" class="btn btn-default" type="submit">Search</button>
+            </div>
+          </form>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">
+              Saved
+              <span class="glyphicon glyphicon-star"></span>
+            </a></li>
+            <li><a href="#">
+              Account
+              <span class="glyphicon glyphicon-user"></span>
+            </a></li>
+          </ul>
+
+        </div><!-- /.navbar-collapse> -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <%- body %>
+
+  </body>
+</html>
