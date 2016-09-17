@@ -64,7 +64,7 @@ $(document).ready(function () {
 
       // when clicked launches Modal with relevant iframe
       var a = $('<a>').attr({
-        'url': url, // hidden, value is set as iframe 'src' when modal is triggered
+        'url': url, // hidden data, value is set as iframe 'src' when modal is triggered
         'data-toggle': 'modal',
         'data-target': '.iframe-modal-lg',
         'class': 'modal-trigger'
