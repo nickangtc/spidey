@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var ejsLayouts = require('express-ejs-layouts');
+var session = require('express-session');
+var passport = require('./config/ppConfig'); // require('passport') done in ppConfig
 
 // ============= MIDDLE WARE + CONFIGURATIONS ==============
 
@@ -13,6 +15,14 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 app.use(ejsLayouts);
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'younotsupposedtoknow',
+  resave: false,
+  saveUninitialized: true
+}));
+// initialize the passport configuration and session as middleware
+app.use(passport.initialize());
+app.use(passport.session()); // this must come after use(session) - dependency
 
 // ============== ROUTES =============
 // READ: get homepage
