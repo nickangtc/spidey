@@ -6,17 +6,17 @@ var db = require('../models');
 
 router.get('/signup', function (req, res) {
   console.log('GET /signup request received');
-  res.render('auth/signup');
+  res.render('signup');
 });
 
 router.get('/login', function (req, res) {
   console.log('GET /login request received');
-  res.render('auth/login');
+  res.render('login');
 });
 
 router.post('/login', passport.authenticate('local', {
   successRedirect: '/',
-  failureRedirect: '/auth/login'
+  failureRedirect: '/login'
 }));
 
 // handle signup based on form input
@@ -36,11 +36,11 @@ router.post('/signup', function (req, res) {
       })(req, res);
     } else {
       console.log('Email already exists');
-      res.redirect('/auth/signup');
+      res.redirect('/signup');
     }
   }).catch(function (error) {
     console.log('An error occurred: ', error.message);
-    res.redirect('/auth/signup');
+    res.redirect('/signup');
   });
 });
 

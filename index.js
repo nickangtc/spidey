@@ -25,7 +25,7 @@ app.use(passport.initialize());
 app.use(passport.session()); // this must come after use(session) - dependency
 
 // /auth/login, /logout, /signup routes
-app.use('/auth', require('./controllers/auth'));
+app.use('/', require('./controllers/auth'));
 
 // ============== ROUTES =============
 // READ: get homepage
