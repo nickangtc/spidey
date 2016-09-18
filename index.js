@@ -3,7 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var ejsLayouts = require('express-ejs-layouts');
 var session = require('express-session');
-// var passport = require('./config/ppConfig'); // require('passport') done in ppConfig
+var passport = require('./config/ppConfig'); // require('passport') done in ppConfig
 
 // ============= MIDDLE WARE + CONFIGURATIONS ==============
 
@@ -21,8 +21,11 @@ app.use(session({
   saveUninitialized: true
 }));
 // initialize the passport configuration and session as middleware
-// app.use(passport.initialize());
-// app.use(passport.session()); // this must come after use(session) - dependency
+app.use(passport.initialize());
+app.use(passport.session()); // this must come after use(session) - dependency
+
+// /auth/login, /logout, /signup routes
+app.use('/auth', require('./controllers/auth'));
 
 // ============== ROUTES =============
 // READ: get homepage
