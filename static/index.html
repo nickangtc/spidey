@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Spidey: the best info web crawler</title>
+  <!-- External libraries -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="js/jquery-3.1.0.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Custom -->
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js"></script>
+</head>
+
+<body>
+  <!-- TODO: add brief instructions on how to phrase search term as landing page -->
+
+  <!-- TODO: add Scrollspy bootstrap for auto active navbar highlight -->
+  <!-- http://getbootstrap.com/javascript/#scrollspy -->
+  <!-- TODO: consider Tooltip for search field -->
+  <!-- http://getbootstrap.com/javascript/#tooltips -->
+
+  <!-- TODO: add smooth scroll for anchor jumps -->
+  <!-- maybe helpful: http://wibblystuff.blogspot.sg/2014/04/in-page-smooth-scroll-using-css3.html -->
+
+  <!-- ============= Navbar ============== -->
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <!-- 3 icon-bars = 1 hamburger icon -->
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <!-- Logo -->
+        <a href="#" class="navbar-brand">Spidey</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <!-- navbar left -->
+        <ul class="nav navbar-nav">
+          <!-- What is 'sr-only'? -->
+          <!-- TODO: write javascript to toggle "active" class between nav links -->
+          <li class="active">
+            <a href="#wikipedia">Wikipedia <span class="sr-only">(current)</span></a>
+          </li>
+          <li><a href="#google">Google</a></li>
+          <li><a href="#">News</a></li>
+        </ul>
+        <!-- navbar right -->
+        <!-- TODO: form role="search" might be redundant -->
+        <form class="navbar-form navbar-right" role="search">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Spidey Search">
+            <button id="submit-btn" class="btn btn-default" type="submit">Search</button>
+          </div>
+        </form>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">
+            Saved
+            <span class="glyphicon glyphicon-star"></span>
+          </a></li>
+          <li><a href="#">
+            Account
+            <span class="glyphicon glyphicon-user"></span>
+          </a></li>
+        </ul>
+
+      </div><!-- /.navbar-collapse> -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+  <!-- large modal popup dialog -->
+  <div class="modal fade iframe-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <iframe
+        width="100%"
+        height="600"
+        frameborder="0"
+        scrolling="yes"
+        src="">
+      </iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============== Results =================== -->
+  <div class="container">
+    <!-- Search term message display -->
+    <div class="row text-center">
+      <h4>Current search: <span id="search-term">lorem ipsum</span></h4>
+    </div>
+
+    <!-- =========== Results display stage ============ -->
+    <!-- results for Wikipedia search -->
+    <div class="row">
+      <div id="wikipedia" class="col-sm-8 col-sm-offset-2">
+        <h3>Wikipedia</h3>
+        <hr>
+      </div><!-- /.col-sm-8 -->
+    </div><!-- /.row -->
+
+    <!-- results for Google search -->
+    <div class="row">
+      <div id="google" class="col-sm-8 col-sm-offset-2">
+        <h3>Google</h3>
+        <hr>
+        <div class="row" id="google-results">
+          <div class="col-sm-12 result-card">
+            <!-- IDs just for reference, not used. Remove when Javascript generates content. -->
+            <h4 id="title">
+              Lorem ipsum (placeholder text)
+            </h4>
+            <p id="excerpt">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+            <!-- ======================== TRY ADDING COL TO FORCE SIZE OF INPUT, AND TO ALIGN 'STAR' BUTTON NEXT TO IT=========== -->
+            <div class="input-group input-group-sm copy-url">
+              <input onclick="this.select();" type="text" class="form-control" value="https://en.wikipedia.org/w/api.php?action=opensearch&search=beatles">
+              <span class="input-group-btn">
+                <button id="" class="btn btn-default" type="button"><span class="glyphicon glyphicon-star-empty"></span></button>
+              </span>
+            </div><!-- /input-group -->
+          </div>
+          <div class="col-sm-12 result-card">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </div>
+          <div class="col-sm-12 result-card">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </div>
+          <div class="col-sm-12 result-card">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </div>
+          <div class="col-sm-12 result-card">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </div>
+          <div class="col-sm-12 result-card">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </div>
+        </div>
+      </div><!-- /.col-sm-8 -->
+    </div><!-- /.row -->
+
+  </div><!-- /.container -->
+
+</body>
+</html>
