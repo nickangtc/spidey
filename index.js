@@ -24,10 +24,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session()); // this must come after use(session) - dependency
 
-// /auth/login, /logout, /signup routes
+// ========== AUTH routes ==========
+
+// READ: /auth/login, /logout, /signup routes
 app.use('/auth', require('./controllers/auth'));
 
 // ============== ROUTES =============
+
 // READ: get homepage
 app.get('/', function (req, res) {
   console.log('GET / request received');
@@ -59,6 +62,12 @@ app.post('/users', function (req, res) {
 app.get('/users/:id/starred', function (req, res) {
   console.log('GET /users/id request received');
   console.log('id:', req.params.id);
+  if (req.user !== undefined) {
+    console.log('user is logged in and authorised to view page');
+    console.log('req.user:', req.user);
+  } else {
+    console.log('user is not logged in');
+  }
   // render user_starred
   res.render('user_starred');
 });

@@ -24,12 +24,19 @@ passport.use(new LocalStrategy({
   passwordField: 'password', // default: password
   session: true  // use passport to handle sessions (default: true)
 }, function (email, password, cb) {  // (callback)
+  console.log('email passed to passport:', email);
+  console.log('password passed to passport:', password);
   db.user.find({
     where: { email: email }
   }).then(function (user) {
+    console.log('(sensitive info) found user with matching email:', user.id, user.name);
+
     if (!user || !user.validPassword(password)) {
+      console.log('!user?', !user);
+      console.log('!user.validPassword(password)?', !user.validPassword(password));
       cb(null, false);
     } else {
+      console.log('password matches hash in db, logging in');
       cb(null, user);
     }
   }).catch(cb);
