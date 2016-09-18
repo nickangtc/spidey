@@ -22,7 +22,7 @@ $(document).ready(function () {
   });
 
   // ========== Functions ===========
-  // Send AJAX GET requests
+  // Send AJAX GET requests to external APIs
   function getJSON (dataType, source) {
     var url = '';
     if (source === 'wikipedia') {

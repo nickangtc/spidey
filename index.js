@@ -4,11 +4,16 @@ var bodyParser = require('body-parser');
 var ejsLayouts = require('express-ejs-layouts');
 var session = require('express-session');
 var passport = require('./config/ppConfig'); // require('passport') done in ppConfig
+var methodOverride = require('method-override');
+var db = require('./models');
 
 // ============= MIDDLE WARE + CONFIGURATIONS ==============
 
 app.use(express.static(__dirname + '/static'));
 app.set('view engine', 'ejs');
+
+// override with POST having ?_method=DELETE / PUT
+app.use(methodOverride('_method'));
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
@@ -48,7 +53,7 @@ app.get('/users/:id/stars', function (req, res) {
 // TODO: dependent on savedUrl.js model
 app.get('/users/:id', function (req, res) {
   console.log('GET /users/id request received');
-  res.render('user_profile');
+  res.render('user_profile', { user: req.user });
 });
 
 // UPDATE: update user profile (user must be logged in)
@@ -58,10 +63,16 @@ app.put('/users/:id', function (req, res) {
   console.log('id:', req.params.id);
   console.log('req.body:', req.body);
   // update db
-
-  // if successful (validated)
-  // ^ redirect to get '/users/:id'
-  res.redirect('/users/:id');
+  db.user.findById(req.params.id).then(function (user) {
+    user.update({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email
+    });
+  }).then(function () {
+    console.log('successfully updated account');
+    res.redirect('/users/:id');
+  });
 });
 
 // READ: get user account edit form (user must be logged in)
@@ -69,7 +80,7 @@ app.get('/users/:id/edit', function (req, res) {
   console.log('GET /users/id/edit request received');
   console.log('id:', req.params.id);
   // render user_profile_edit
-  res.render('user_profile_edit');
+  res.render('user_profile_edit', { user: req.user });
 });
 
 // DESTROY: delete user account

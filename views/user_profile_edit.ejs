@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2>Edit profile</h2>
+      <form action="/users/<%= user.id %>?_method=PUT" method="POST">
+        <div>
+          First name: <input type="text" name="firstName" value="<%= user.firstName %>" required>
+        </div>
+        <div>
+          Last name: <input type="text" name="lastName" value="<%= user.lastName %>" required>
+        </div>
+        <div>
+          Email: <input type="email" name="email" value="<%= user.email %>" required>
+        </div>
+
+        <button type="submit">Save changes</button>
+
+      </form>
+    </div>
+  </div>
+</div>
