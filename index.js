@@ -34,29 +34,9 @@ app.get('/', function (req, res) {
   res.render('index');
 });
 
-// READ: get new user creation form
-app.get('/users/new', function (req, res) {
-  console.log('GET /users/new request received');
-  // render user_new
-  res.render('user_new');
-});
-
-// CREATE: register new user
-app.post('/users', function (req, res) {
-  console.log('POST /users request received');
-  console.log('req.body:', req.body);
-  // if successful (validated, no matches in db)
-  // ^ redirect to get '/'
-
-  // if unsuccessful (user exists)
-  // ^ redirect to get '/users/new' with flash msg
-
-  // if user exists - redirect to 'login'
-  res.render('index');
-});
-
-// READ: get profile
-app.get('/users/:id/starred', function (req, res) {
+// READ: get user's starred urls (user must be logged in)
+// TODO: dependent on savedUrl.js model
+app.get('/users/:id/stars', function (req, res) {
   console.log('GET /users/id request received');
   console.log('id:', req.params.id);
   console.log('cookie:', req.user);
@@ -64,15 +44,15 @@ app.get('/users/:id/starred', function (req, res) {
   res.render('user_starred');
 });
 
-// READ: get user profile edit form
-app.get('/users/:id/edit', function (req, res) {
-  console.log('GET /users/id/edit request received');
-  console.log('id:', req.params.id);
-  // render user_profile_edit
-  res.render('user_profile_edit');
+// READ: get user profile (user must be logged in)
+// TODO: dependent on savedUrl.js model
+app.get('/users/:id', function (req, res) {
+  console.log('GET /users/id request received');
+  res.render('user_profile');
 });
 
-// UPDATE: update user profile
+// UPDATE: update user profile (user must be logged in)
+// TODO: dependent on savedUrl.js model
 app.put('/users/:id', function (req, res) {
   console.log('PUT /users/id request received');
   console.log('id:', req.params.id);
@@ -81,6 +61,15 @@ app.put('/users/:id', function (req, res) {
 
   // if successful (validated)
   // ^ redirect to get '/users/:id'
+  res.redirect('/users/:id');
+});
+
+// READ: get user account edit form (user must be logged in)
+app.get('/users/:id/edit', function (req, res) {
+  console.log('GET /users/id/edit request received');
+  console.log('id:', req.params.id);
+  // render user_profile_edit
+  res.render('user_profile_edit');
 });
 
 // DESTROY: delete user account
