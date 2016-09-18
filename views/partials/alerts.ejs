@@ -1,0 +1,22 @@
+<% if (alerts.error) { %>
+  <% alerts.error.forEach(function(msg) { %>
+    <div class="container-fluid alert alert-danger">
+      <div class="row">
+        <div class="col-sm-12 text-center">
+      <%= msg %>
+        </div>
+      </div>
+    </div>
+  <% }); %>
+<% } %>
+<% if (alerts.success) { %>
+  <% alerts.success.forEach(function(msg) { %>
+    <div class="container-fluid alert alert-success">
+      <div class="row">
+        <div class="col-sm-12 text-center">
+      <%= msg %>
+        </div>
+      </div>
+    </div>
+  <% }); %>
+<% } %>

@@ -6,6 +6,7 @@ var session = require('express-session');
 var passport = require('./config/ppConfig'); // require('passport') done in ppConfig
 var methodOverride = require('method-override');
 var db = require('./models');
+var flash = require('connect-flash');
 
 // ============= MIDDLE WARE + CONFIGURATIONS ==============
 
@@ -25,9 +26,20 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+app.use(flash()); // one-off messages in cookies
 // initialize the passport configuration and session as middleware
 app.use(passport.initialize());
 app.use(passport.session()); // this must come after use(session) - dependency
+
+// middleware to retrieve Flash messages embedded in requests
+app.use(function (req, res, next) {
+  // before every route, attach the flash messages and current user to res.locals
+  res.locals.alerts = req.flash();
+  res.locals.currentUser = req.user;
+  console.log('Flash res.locals.alerts:', res.locals.alerts);
+  console.log('Flash res.locals.currentUser:', res.locals.currentUser);
+  next();
+});
 
 // /auth/login, /logout, /signup routes
 app.use('/', require('./controllers/auth'));
