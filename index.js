@@ -59,6 +59,7 @@ app.post('/users', function (req, res) {
 app.get('/users/:id/starred', function (req, res) {
   console.log('GET /users/id request received');
   console.log('id:', req.params.id);
+  console.log('cookie:', req.user);
   // render user_starred
   res.render('user_starred');
 });

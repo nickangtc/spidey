@@ -5,10 +5,12 @@ var passport = require('../config/ppConfig');
 var db = require('../models');
 
 router.get('/signup', function (req, res) {
+  console.log('GET /signup request received');
   res.render('auth/signup');
 });
 
 router.get('/login', function (req, res) {
+  console.log('GET /login request received');
   res.render('auth/login');
 });
 
@@ -22,12 +24,13 @@ router.post('/signup', function (req, res) {
   db.user.findOrCreate({
     where: { email: req.body.email },
     defaults: {
-      name: req.body.name,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       password: req.body.password
     }
   }).spread(function (user, created) {
     if (created) {
-      // replace the contents of this if statement with the code below
+      console.log('created new account');
       passport.authenticate('local', {
         successRedirect: '/'
       })(req, res);

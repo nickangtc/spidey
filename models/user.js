@@ -6,7 +6,16 @@ module.exports = function (sequelize, DataTypes) {
   // format from docs: define(modelName, attributes, [options])
   // [options] must be contained in a single object!
   var user = sequelize.define('user', {
-    name: {
+    firstName: {
+      type: DataTypes.STRING,
+      validate: {
+        len: {
+          args: [1, 99],
+          msg: 'Name must be between 1 and 99 characters'
+        }
+      }
+    },
+    lastName: {
       type: DataTypes.STRING,
       validate: {
         len: {

@@ -1,16 +1,16 @@
 {
   "development": {
-    "database": "spideyapp_development",
+    "database": "spidey_development",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "database": "spideyapp_test",
+    "database": "spidey_test",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
-    "database": "spideyapp_production",
+    "database": "spidey_production",
     "host": "127.0.0.1",
     "dialect": "postgres"
   }
