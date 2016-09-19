@@ -39,43 +39,6 @@ $(document).ready(function () {
     });
   }
 
-  // Send AJAX POST/DELETE requests to own server
-  function updateSavedUrls (action, route, urlToUpdate) {
-    // action: 'create' or 'delete' - used in node backend
-    console.log('inside updateSavedUrls function');
-    console.log('action:', action);
-    console.log('route:', route);
-    console.log('url to update:', urlToUpdate);
-
-    $.ajax({
-      type: 'POST',
-      url: route,
-      data: {
-        url: urlToUpdate,
-        action: action
-      },
-      error: function (xhr, err) {
-        handleError(xhr, err, urlToUpdate); // urlToUpdate identifies which star-btn
-      }
-    }); // success implicitly handled by handleError function
-  }
-
-  // handle errors from updateSavedUrls() function
-  function handleError (xhr, err, url) {
-    // print error message to top of page
-    $('#user-msg').text(err + ' when saving ' + url + ' - try again later');
-    console.log('handling error...');
-
-    // remove 'star-btn' class (identifier)
-    var thatStarBtn = '.star-btn[url|="' + url + '"]';
-    console.log('thatStarBtn before:', $(thatStarBtn));
-    $(thatStarBtn).removeClass('starred');
-    console.log('thatStarBtn after:', $(thatStarBtn));
-    // change star glyphicon to star-empty
-    var starGlyph = $(thatStarBtn).children()[0];
-    $(starGlyph).addClass('glyphicon-star-empty').removeClass('glyphicon-star');
-  }
-
   // Format GET response, append to page
   function loadResults (data, source) {
     // remove previous search results
@@ -144,33 +107,93 @@ $(document).ready(function () {
       // url is obtained from 'url' attr of <a>
       var elem = ev.currentTarget; // element handle
       var urlStr = elem.attributes.url.nodeValue; // string value
-      var starGlyph = '';
       console.log('ev', ev);
 
       if (!elem.classList.contains('starred')) {
-        // ajax POST to create new entry in 'star' table in db
         // format: updateSavedUrls(method, route, data)
         updateSavedUrls('create', '/stars/update', urlStr);
-
-        // front-end DOM manipulation - highlight star
-        $(elem).addClass('starred'); // has no css, for identification purposes only
-        starGlyph = $(elem).children()[0];
-        $(starGlyph).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
-        // change glyphicon-star-empty to glyphicon-star
-        // elem.childNodes[0]
-        console.log('clicked elem was not starred - saving...');
       } else if (elem.classList.contains('starred')) {
         // ajax DELETE to destroy matching entry in 'star' table in db
         updateSavedUrls('delete', '/stars/update', urlStr);
-
-        // front-end DOM manipulation - remove highlight star
-        $(elem).removeClass('starred'); // has no css, for identification purposes only
-        starGlyph = $(elem).children()[0];
-        $(starGlyph).addClass('glyphicon-star-empty').removeClass('glyphicon-star');
-        // change glyphicon-star to glyphicon-star-empty
-        console.log('clicked elem was starred - removing...');
       }
     });
+
+    // Send AJAX POST/DELETE requests to own server
+    function updateSavedUrls (action, route, urlToUpdate) {
+      // action: 'create' or 'delete' - used in node backend
+      $.ajax({
+        type: 'POST',
+        url: route,
+        data: {
+          url: urlToUpdate,
+          action: action
+        },
+        success: function (data) {
+          console.log('data from server received:', data);
+          var option = '';
+          if (action === 'create') {
+            option = 'star';
+          } else if (action === 'delete') {
+            option = 'unstar';
+          }
+          updateStarIcon(urlToUpdate, option, data);
+        },
+        error: function (xhr, err) {
+          handleError(xhr, err, urlToUpdate); // urlToUpdate identifies which star-btn
+        } // success implicitly handled by handleError function
+      });
+    }
+
+    // options: 'star', 'unstar'
+    function updateStarIcon (url, option, data) {
+      console.log('inside updateStarIcon function');
+      console.log('data:', data);
+      var thatStarBtn = '';
+      var starGlyph = '';
+
+      if (data.status === 'error') { // user not logged in
+        $('#user-msg').text('Please signup to save Urls').addClass('alert alert-danger');
+      } else {  // user verified to be logged in
+        // change glyphicon to coloured star
+        if (option === 'star') {
+          // remove 'star-btn' class (identifier)
+          thatStarBtn = '.star-btn[url|="' + url + '"]';
+          console.log('thatStarBtn before:', $(thatStarBtn));
+          $(thatStarBtn).addClass('starred');
+          console.log('thatStarBtn after:', $(thatStarBtn));
+          // change star glyphicon to star-empty
+          starGlyph = $(thatStarBtn).children()[0];
+          $(starGlyph).addClass('glyphicon-star').removeClass('glyphicon-star-empty');
+
+          // change glyphicon to empty star
+        } else if (option === 'unstar') {
+          // remove 'star-btn' class (identifier)
+          thatStarBtn = '.star-btn[url|="' + url + '"]';
+          console.log('thatStarBtn before:', $(thatStarBtn));
+          $(thatStarBtn).removeClass('starred');
+          console.log('thatStarBtn after:', $(thatStarBtn));
+          // change star glyphicon to star-empty
+          starGlyph = $(thatStarBtn).children()[0];
+          $(starGlyph).addClass('glyphicon-star-empty').removeClass('glyphicon-star');
+        }
+      }
+    }
+
+    // handle errors from updateSavedUrls() function
+    function handleError (xhr, err, url) {
+      // print error message to top of page
+      $('#user-msg').text(err + ' when saving ' + url + ' - try again later');
+      console.log('handling error...');
+
+      // remove 'star-btn' class (identifier)
+      var thatStarBtn = '.star-btn[url|="' + url + '"]';
+      console.log('thatStarBtn before:', $(thatStarBtn));
+      $(thatStarBtn).removeClass('starred');
+      console.log('thatStarBtn after:', $(thatStarBtn));
+      // change star glyphicon to star-empty
+      var starGlyph = $(thatStarBtn).children()[0];
+      $(starGlyph).addClass('glyphicon-star-empty').removeClass('glyphicon-star');
+    }
 
     // ============= Modal click handler ==============
     // index.html contains modal with embedded iframe
