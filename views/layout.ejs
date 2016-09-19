@@ -24,7 +24,7 @@
             <span class="icon-bar"></span>
           </button>
           <!-- Logo -->
-          <a href="#" class="navbar-brand">Spidey</a>
+          <a href="/" class="navbar-brand">Spidey</a>
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-collapse-1">
@@ -48,13 +48,19 @@
           </form>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">
-              Saved
+              Starred
               <span class="glyphicon glyphicon-star"></span>
             </a></li>
-            <li><a href="#">
-              Account
-              <span class="glyphicon glyphicon-user"></span>
-            </a></li>
+            <li>
+              <% var user = user || 'register' %>
+              <% if (typeof user === 'object') { %>
+                <a href="/users/<%= user.id %>"> <%= user.firstName %>
+              <% } else if (user === 'register') { %>
+                <a href="/signup"> New/Login
+              <% } %>
+                <span class="glyphicon glyphicon-user"></span>
+              </a>
+            </li>
           </ul>
 
         </div><!-- /.navbar-collapse> -->

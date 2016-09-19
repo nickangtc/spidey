@@ -48,7 +48,12 @@ app.use('/', require('./controllers/auth'));
 // READ: get homepage
 app.get('/', function (req, res) {
   console.log('GET / request received');
-  res.render('index');
+  if (req.user) {
+    res.render('index', { user: req.user });
+  } else if (req.user === undefined) {
+    res.render('index', {user: ''});
+  }
+  // res.render('index', { user: req.user });
 });
 
 // READ: get user's starred urls (user must be logged in)
