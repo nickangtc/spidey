@@ -40,27 +40,22 @@ $(document).ready(function () {
   }
 
   // Send AJAX POST/DELETE requests to own server
-  function updateSavedUrls (method, route, urlToSave) {
+  function updateSavedUrls (action, route, urlToUpdate) {
+    // action: 'create' or 'delete' - used in node backend
     console.log('inside updateSavedUrls function');
-    console.log('req type:', method);
+    console.log('action:', action);
     console.log('route:', route);
-    console.log('data:', urlToSave);
-    var action = '';
+    console.log('url to update:', urlToUpdate);
 
-    if (method === 'POST') {
-      action = 'create';
-    } else if (method === 'DELETE') {
-      action = 'delete';
-    }
     $.ajax({
-      type: method,
+      type: 'POST',
       url: route,
       data: {
-        url: urlToSave,
+        url: urlToUpdate,
         action: action
       },
       error: function (xhr, err) {
-        handleError(xhr, err, urlToSave); // urlToSave identifies which star-btn
+        handleError(xhr, err, urlToUpdate); // urlToUpdate identifies which star-btn
       }
     }); // success implicitly handled by handleError function
   }
@@ -153,9 +148,9 @@ $(document).ready(function () {
       console.log('ev', ev);
 
       if (!elem.classList.contains('starred')) {
-        // ajax POST to destroy matching entry in 'star' table
+        // ajax POST to create new entry in 'star' table in db
         // format: updateSavedUrls(method, route, data)
-        updateSavedUrls('POST', '/stars/new', urlStr);
+        updateSavedUrls('create', '/stars/update', urlStr);
 
         // front-end DOM manipulation - highlight star
         $(elem).addClass('starred'); // has no css, for identification purposes only
@@ -165,9 +160,8 @@ $(document).ready(function () {
         // elem.childNodes[0]
         console.log('clicked elem was not starred - saving...');
       } else if (elem.classList.contains('starred')) {
-        // ajas DELETE to create new entry in 'star' table
-        // format: updateSavedUrls(method, route, data)
-        updateSavedUrls('DELETE', '/stars/delete', urlStr);
+        // ajax DELETE to destroy matching entry in 'star' table in db
+        updateSavedUrls('delete', '/stars/update', urlStr);
 
         // front-end DOM manipulation - remove highlight star
         $(elem).removeClass('starred'); // has no css, for identification purposes only

@@ -102,7 +102,7 @@ app.delete('/users/:id', function (req, res) {
   // TODO: not sure how to implement yet
 });
 
-app.post('/stars/new', function (req, res) {
+app.post('/stars/update', function (req, res) {
   console.log('STAR REQ.BODY', req.body);
   console.log('USERID:', req.user.id);
   // update star table with data and userid
@@ -120,14 +120,21 @@ app.post('/stars/new', function (req, res) {
     }).then(function (user, created) {
       console.log('user found/created:', user);
       console.log('created?:', created);
-      res.json({ user: user });
+      res.json({ status: 'create successful' });
     });
     // if found...
 
     // if created...
   } else if (req.body.action === 'delete') {
     // delete
-    res.json({ user: 'user' });
+    db.savedUrl.destroy({
+      where: {
+        userid: req.user.id,
+        url: req.body.url
+      }
+    }).then(function () {
+      res.json({ status: 'delete successful' });
+    });
   }
 });
 
