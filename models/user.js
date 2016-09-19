@@ -49,7 +49,7 @@ module.exports = function (sequelize, DataTypes) {
         // store the hash as the user's password
         createdUser.password = hash;
 
-        // sanitise data: first-letter cap for firstName, lastName
+        // sanitise the data: first-letter cap for firstName & lastName
         // TODO: refactor into a function with 2 params
         var firstName = createdUser.firstName;  // sanitise firstName
         firstName = firstName.split(' ');
@@ -60,7 +60,6 @@ module.exports = function (sequelize, DataTypes) {
           firstName.splice(i, 1, elem);
         }
         firstName = firstName.join(' ');
-        console.log('sanitised first name stored in db:', firstName);
 
         var lastName = createdUser.lastName;  // sanitise lastName
         lastName = lastName.split(' ');
@@ -71,7 +70,6 @@ module.exports = function (sequelize, DataTypes) {
           lastName.splice(j, 1, el);
         }
         lastName = lastName.join(' ');
-        console.log('sanitised last name stored in db:', lastName);
 
         // updating the createdUser obj with sanitised names
         createdUser.firstName = firstName;

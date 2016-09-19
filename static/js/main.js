@@ -8,7 +8,7 @@ $(document).ready(function () {
   var SEARCH_STR = '';
   var RESULTS_LIMIT = 5;
 
-  // ======= Form handler ========
+  // ======= Search form handler ========
   $('#submit-btn').on('click', function (ev) {
     ev.preventDefault();
     SEARCH_STR = $('form input').val();
@@ -37,6 +37,48 @@ $(document).ready(function () {
         loadResults(data, source);
       }
     });
+  }
+
+  // Send AJAX POST/DELETE requests to own server
+  function updateSavedUrls (method, route, urlToSave) {
+    console.log('inside updateSavedUrls function');
+    console.log('req type:', method);
+    console.log('route:', route);
+    console.log('data:', urlToSave);
+    var action = '';
+
+    if (method === 'POST') {
+      action = 'create';
+    } else if (method === 'DELETE') {
+      action = 'delete';
+    }
+    $.ajax({
+      type: method,
+      url: route,
+      data: {
+        url: urlToSave,
+        action: action
+      },
+      error: function (xhr, err) {
+        handleError(xhr, err, urlToSave); // urlToSave identifies which star-btn
+      }
+    }); // success implicitly handled by handleError function
+  }
+
+  // handle errors from updateSavedUrls() function
+  function handleError (xhr, err, url) {
+    // print error message to top of page
+    $('#user-msg').text(err + ' when saving ' + url + ' - try again later');
+    console.log('handling error...');
+
+    // remove 'star-btn' class (identifier)
+    var thatStarBtn = '.star-btn[url|="' + url + '"]';
+    console.log('thatStarBtn before:', $(thatStarBtn));
+    $(thatStarBtn).removeClass('starred');
+    console.log('thatStarBtn after:', $(thatStarBtn));
+    // change star glyphicon to star-empty
+    var starGlyph = $(thatStarBtn).children()[0];
+    $(starGlyph).addClass('glyphicon-star-empty').removeClass('glyphicon-star');
   }
 
   // Format GET response, append to page
@@ -78,7 +120,10 @@ $(document).ready(function () {
         value: url
       }).addClass('form-control');
       var inputStar = $('<span>').addClass('input-group-btn');
-      var starBtn = $('<button>').attr('type', 'button').addClass('btn btn-default');
+      var starBtn = $('<button>').attr({
+        'type': 'button',
+        'url': url
+      }).addClass('btn btn-default star-btn');
       var glyphicon = $('<span>').addClass('glyphicon glyphicon-star-empty');
 
       // append card elements from child to parent, then to page
@@ -99,6 +144,40 @@ $(document).ready(function () {
       $('#wikipedia').append(hidden);
     }
 
+    // ============= Star Buttons click handler =============
+    $('.star-btn').on('click', function (ev) {
+      // url is obtained from 'url' attr of <a>
+      var elem = ev.currentTarget; // element handle
+      var urlStr = elem.attributes.url.nodeValue; // string value
+      var starGlyph = '';
+      console.log('ev', ev);
+
+      if (!elem.classList.contains('starred')) {
+        // ajax POST to destroy matching entry in 'star' table
+        // format: updateSavedUrls(method, route, data)
+        updateSavedUrls('POST', '/stars/new', urlStr);
+
+        // front-end DOM manipulation - highlight star
+        $(elem).addClass('starred'); // has no css, for identification purposes only
+        starGlyph = $(elem).children()[0];
+        $(starGlyph).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+        // change glyphicon-star-empty to glyphicon-star
+        // elem.childNodes[0]
+        console.log('clicked elem was not starred - saving...');
+      } else if (elem.classList.contains('starred')) {
+        // ajas DELETE to create new entry in 'star' table
+        // format: updateSavedUrls(method, route, data)
+        updateSavedUrls('DELETE', '/stars/delete', urlStr);
+
+        // front-end DOM manipulation - remove highlight star
+        $(elem).removeClass('starred'); // has no css, for identification purposes only
+        starGlyph = $(elem).children()[0];
+        $(starGlyph).addClass('glyphicon-star-empty').removeClass('glyphicon-star');
+        // change glyphicon-star to glyphicon-star-empty
+        console.log('clicked elem was starred - removing...');
+      }
+    });
+
     // ============= Modal click handler ==============
     // index.html contains modal with embedded iframe
     // main.js sets relevant 'src' of iframe when result card is clicked
@@ -110,5 +189,5 @@ $(document).ready(function () {
         $('iframe').attr('src', url);
       }
     });
-  }
+  } // end loadResults
 });
