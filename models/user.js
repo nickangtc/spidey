@@ -48,6 +48,35 @@ module.exports = function (sequelize, DataTypes) {
         var hash = bcrypt.hashSync(createdUser.password, 10);
         // store the hash as the user's password
         createdUser.password = hash;
+
+        // sanitise data: first-letter cap for firstName, lastName
+        // TODO: refactor into a function with 2 params
+        var firstName = createdUser.firstName;  // sanitise firstName
+        firstName = firstName.split(' ');
+        for (var i = 0; i < firstName.length; i++) {
+          var elem = firstName[i];
+          elem = elem.replace(elem.charAt(0), elem.charAt(0).toUpperCase());
+          // replace old array elem with sanitised string elem
+          firstName.splice(i, 1, elem);
+        }
+        firstName = firstName.join(' ');
+        console.log('sanitised first name stored in db:', firstName);
+
+        var lastName = createdUser.lastName;  // sanitise lastName
+        lastName = lastName.split(' ');
+        for (var j = 0; j < lastName.length; j++) {
+          var el = lastName[j];
+          el = el.replace(el.charAt(0), el.charAt(0).toUpperCase());
+          // replace old array el with sanitised string el
+          lastName.splice(j, 1, el);
+        }
+        lastName = lastName.join(' ');
+        console.log('sanitised last name stored in db:', lastName);
+
+        // updating the createdUser obj with sanitised names
+        createdUser.firstName = firstName;
+        createdUser.lastName = lastName;
+
         // continue to save the user, with no errors
         cb(null, createdUser);
       }

@@ -57,7 +57,6 @@ app.get('/', function (req, res) {
 });
 
 // READ: get user's starred urls (user must be logged in)
-// TODO: dependent on savedUrl.js model
 app.get('/users/:id/stars', function (req, res) {
   console.log('GET /users/id request received');
   console.log('id:', req.params.id);
@@ -67,14 +66,12 @@ app.get('/users/:id/stars', function (req, res) {
 });
 
 // READ: get user profile (user must be logged in)
-// TODO: dependent on savedUrl.js model
 app.get('/users/:id', function (req, res) {
   console.log('GET /users/id request received');
   res.render('user_profile', { user: req.user });
 });
 
 // UPDATE: update user profile (user must be logged in)
-// TODO: dependent on savedUrl.js model
 app.put('/users/:id', function (req, res) {
   console.log('PUT /users/id request received');
   console.log('id:', req.params.id);
