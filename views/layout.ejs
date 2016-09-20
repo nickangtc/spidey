@@ -48,26 +48,45 @@
           </form>
           <ul class="nav navbar-nav navbar-right">
             <!-- Saved urls button -->
-            <li>
 
-              <% if (currentUser) { %>
-              <a href="/users/<%= currentUser.id %>/stars">Saved
-                  <% } else if (!currentUser) { %>
-                    <a href="/signup">Saved
-                  <% } %>
-                <span class="glyphicon glyphicon-star"></span>
-              </a>
-            </li>
-            <!-- New / Login button -->
-            <li>
-              <% if (currentUser) { %>
-                <a href="/users/<%= currentUser.id %>"> <%= currentUser.firstName %>
-              <% } else if (!currentUser) { %>
-                <a href="/signup"> New/Login
-              <% } %>
+            <% if (currentUser) { %>
+              <li>
+                <a href="/users/<%= currentUser.id %>/stars">
+                  <span class="glyphicon glyphicon-star"></span>
+                  Saved
+                </a>
+              </li>
+            <% } else if (!currentUser) { %>
+              <li>
+                <a href="/signup">
+                  <span class="glyphicon glyphicon-star"></span>
+                  Saved
+                </a>
+              </li>
+            <% } %>
+
+
+            <% if (currentUser) { %>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <span class="glyphicon glyphicon-user"></span>
-              </a>
+                <%= currentUser.firstName %>
+                <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/users/<%= currentUser.id %>/edit">Edit profile</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="/logout">Logout</a></li>
+              </ul>
             </li>
+
+            <% } else if (!currentUser) { %>
+              <li>
+                <a href="/signup">
+                  <span class="glyphicon glyphicon-user"></span>
+                  New/Login
+                </a>
+              </li>
+            <% } %>
           </ul>
 
         </div><!-- /.navbar-collapse> -->
