@@ -7,6 +7,7 @@ var passport = require('./config/ppConfig'); // require('passport') done in ppCo
 var methodOverride = require('method-override');
 var db = require('./models');
 var flash = require('connect-flash');
+var isLoggedIn = require('./middleware/isLoggedIn');
 
 /* NOTE:
 * - this project's routes have heavy dependency on req.user object
@@ -62,16 +63,23 @@ app.get('/', function (req, res) {
 });
 
 // READ: get user's starred urls (user must be logged in)
-app.get('/users/:id/stars', function (req, res) {
-  console.log('GET /users/id request received');
+app.get('/users/:id/stars', isLoggedIn, function (req, res) {
+  console.log('GET /users/id/stars request received');
   console.log('id:', req.params.id);
-  console.log('cookie:', req.user);
-  // render user_starred
-  res.render('user_starred');
+
+  db.savedUrl.findAll({
+    where: {
+      userid: req.params.id
+    }
+  }).then(function (data) {
+    console.log('retrieved all instances of user\'s saved urls from db');
+    console.log('data:', data);
+    res.render('user_starred', { data: data });
+  });
 });
 
 // READ: get user profile (user must be logged in)
-app.get('/users/:id', function (req, res) {
+app.get('/users/:id', isLoggedIn, function (req, res) {
   console.log('GET /users/id request received');
   res.render('user_profile', { user: req.user });
 });
@@ -95,7 +103,7 @@ app.put('/users/:id', function (req, res) {
 });
 
 // READ: get user account edit form (user must be logged in)
-app.get('/users/:id/edit', function (req, res) {
+app.get('/users/:id/edit', isLoggedIn, function (req, res) {
   console.log('GET /users/id/edit request received');
   console.log('id:', req.params.id);
   // render user_profile_edit

@@ -47,12 +47,19 @@
             </div>
           </form>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">
-              Starred
-              <span class="glyphicon glyphicon-star"></span>
-            </a></li>
+            <!-- Saved urls button -->
             <li>
               <% var user = user || 'register' %>
+              <% if (typeof user === 'object') { %>
+              <a href="/users/<%= user.id %>/stars">Saved
+                  <% } else if (user === 'register') { %>
+                    <a href="/signup">Saved
+                  <% } %>
+                <span class="glyphicon glyphicon-star"></span>
+              </a>
+            </li>
+            <!-- New / Login button -->
+            <li>
               <% if (typeof user === 'object') { %>
                 <a href="/users/<%= user.id %>"> <%= user.firstName %>
               <% } else if (user === 'register') { %>
