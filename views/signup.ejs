@@ -2,13 +2,33 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-sm-8 col-sm-offset-2">
+    <div class="col-sm-6 col-sm-offset-3">
 
       <!-- Sign up -->
       <h2>Sign up</h2>
-      <h3>Favourite urls and refer to them anytime you want</h3>
+      <h4>Favourite urls and refer to them anytime you want</h4>
 
-      <form action="/signup" method="post" class="form-horizontal">
+      <form action="/signup" method="post">
+        <div class="form-group">
+          <label for="first-name">First name</label>
+          <input type="text" name="firstName" class="form-control" id="first-name" placeholder="Mary" required>
+        </div>
+        <div class="form-group">
+          <label for="last-name">Last name</label>
+          <input type="text" name="lastName" class="form-control" id="last-name" placeholder="Doe" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" name="email" class="form-control" id="email" placeholder="mary@doe.com" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" name="password" class="form-control" id="password" required>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+
+      <!-- <form action="/signup" method="post" class="form-horizontal">
         <div class="form-group">
           <label class="col-sm-2 control-label">
             First name
@@ -51,7 +71,7 @@
           </div>
         </div>
 
-      </form>
+      </form> -->
 
       <!-- or login -->
       <div>
