@@ -51,7 +51,8 @@ module.exports = function (sequelize, DataTypes) {
 
         // sanitise the data: first-letter cap for firstName & lastName
         // TODO: refactor into a function with 2 params
-        var firstName = createdUser.firstName;  // sanitise firstName
+        // sanitise firstName
+        var firstName = createdUser.firstName;
         firstName = firstName.split(' ');
         for (var i = 0; i < firstName.length; i++) {
           var elem = firstName[i];
@@ -60,8 +61,8 @@ module.exports = function (sequelize, DataTypes) {
           firstName.splice(i, 1, elem);
         }
         firstName = firstName.join(' ');
-
-        var lastName = createdUser.lastName;  // sanitise lastName
+        // sanitise lastName
+        var lastName = createdUser.lastName;
         lastName = lastName.split(' ');
         for (var j = 0; j < lastName.length; j++) {
           var el = lastName[j];
@@ -71,6 +72,8 @@ module.exports = function (sequelize, DataTypes) {
         }
         lastName = lastName.join(' ');
 
+        // sanitise email to lowercase
+        createdUser.email = createdUser.email.toLowerCase();
         // updating the createdUser obj with sanitised names
         createdUser.firstName = firstName;
         createdUser.lastName = lastName;
