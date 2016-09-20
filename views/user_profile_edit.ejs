@@ -2,15 +2,15 @@
   <div class="row">
     <div class="col-sm-12">
       <h2>Edit profile</h2>
-      <form action="/users/<%= user.id %>?_method=PUT" method="POST">
+      <form action="/users/<%= currentUser.id %>?_method=PUT" method="POST">
         <div>
-          First name: <input type="text" name="firstName" value="<%= user.firstName %>" required>
+          First name: <input type="text" name="firstName" value="<%= currentUser.firstName %>" required>
         </div>
         <div>
-          Last name: <input type="text" name="lastName" value="<%= user.lastName %>" required>
+          Last name: <input type="text" name="lastName" value="<%= currentUser.lastName %>" required>
         </div>
         <div>
-          Email: <input type="email" name="email" value="<%= user.email %>" required>
+          Email: <input type="email" name="email" value="<%= currentUser.email %>" required>
         </div>
 
         <button type="submit">Save changes</button>

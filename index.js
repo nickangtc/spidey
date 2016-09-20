@@ -54,12 +54,12 @@ app.use('/', require('./controllers/auth'));
 // READ: get homepage
 app.get('/', function (req, res) {
   console.log('GET / request received');
-  if (req.user) {
-    res.render('index', { user: req.user });
-  } else if (req.user === undefined) {
-    res.render('index', {user: ''});
-  }
-  // res.render('index', { user: req.user });
+  res.render('index');
+  // if (req.user) {
+  //   res.render('index', { user: req.user });
+  // } else if (req.user === undefined) {
+  //   res.render('index', {user: ''});
+  // }
 });
 
 // READ: get user's starred urls (user must be logged in)
@@ -81,7 +81,7 @@ app.get('/users/:id/stars', isLoggedIn, function (req, res) {
 // READ: get user profile (user must be logged in)
 app.get('/users/:id', isLoggedIn, function (req, res) {
   console.log('GET /users/id request received');
-  res.render('user_profile', { user: req.user });
+  res.render('user_profile');
 });
 
 // UPDATE: update user profile (user must be logged in)
@@ -107,7 +107,7 @@ app.get('/users/:id/edit', isLoggedIn, function (req, res) {
   console.log('GET /users/id/edit request received');
   console.log('id:', req.params.id);
   // render user_profile_edit
-  res.render('user_profile_edit', { user: req.user });
+  res.render('user_profile_edit');
 });
 
 // DESTROY: delete user account
@@ -118,7 +118,7 @@ app.delete('/users/:id', function (req, res) {
 // ============ ROUTES for Saving/deleting urls =============
 
 // GET: used for checking if user is logged in
-app.get('/stars/update', function (req, res) {
+app.get('/stars/update', isLoggedIn, function (req, res) {
   if (req.user === undefined) {
     res.json({
       status: false
@@ -131,13 +131,14 @@ app.get('/stars/update', function (req, res) {
 });
 
 // CREATE/DESTROY: savedUrls
-app.post('/stars/update', function (req, res) {
+app.post('/stars/update', isLoggedIn, function (req, res) {
   console.log('STAR REQ.BODY', req.body);
   console.log('REQ.USER:', req.user);
 
   if (req.user === undefined) {
     res.json({
       status: 'error'
+      // ^ don't change this value - frontend dependence
     });
   } else {
     // update star table with data and userid

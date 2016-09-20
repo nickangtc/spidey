@@ -173,7 +173,7 @@ $(document).ready(function () {
           $(thatStarBtn).removeClass('starred');
           console.log('thatStarBtn after:', $(thatStarBtn));
           // change star glyphicon to star-empty
-          starGlyph = $(thatStarBtn).children()[0];
+          starGlyph = $(thatStarBtn).vchildren()[0];
           $(starGlyph).addClass('glyphicon-star-empty').removeClass('glyphicon-star');
         }
       }

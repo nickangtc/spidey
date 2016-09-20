@@ -31,13 +31,13 @@ router.post('/signup', function (req, res) {
       password: req.body.password
     }
   }).spread(function (user, created) {
-    if (created) {
+    if (created) { // new user created
       console.log('created new account');
       passport.authenticate('local', {
         successRedirect: '/',
         successFlash: 'Account created. You\'re now logged in. Welcome :)'
       })(req, res);
-    } else {
+    } else { // not created
       req.flash('error', 'Email already exists');
       res.redirect('/signup');
     }
