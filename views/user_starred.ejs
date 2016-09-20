@@ -5,14 +5,43 @@
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
       <h2>Your saved urls</h2>
-      
+
       <ul>
         <% for (var i = 0; i < data.length; i++) { %>
-          <a href="<%= data[i].dataValues.url %>" target="_blank">
-            <li><%= data[i].dataValues.url %></li>
-          </a>
+            <li url="<%= data[i].dataValues.url %>">
+              <a href="<%= data[i].dataValues.url %>" target="_blank">
+              <%= data[i].dataValues.url %>
+              </a>
+              <a href="/stars/update" class="delete-link">
+                <span class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></span>
+              </a>
+            </li>
         <% } %>
       </ul>
     </div>
   </div>
 </div>
+
+<script>
+  $('.delete-link').on('click', function (ev) {
+    ev.preventDefault();
+    var route = ev.currentTarget.pathname; // pathname = href val
+    var li = ev.currentTarget.parentNode;
+    var urlToDelete = li.attributes.url.value;
+
+    // delete url in backend database
+    $.ajax({
+      type: 'POST',
+      url: route,
+      data: {
+        url: urlToDelete,
+        action: 'delete'
+      },
+      success: function (data) {
+        // fadeOut element from page
+        // (on page refresh, element already deleted from db)
+        $(li).fadeOut();
+      }
+    })
+  });
+</script>
