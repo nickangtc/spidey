@@ -34,13 +34,45 @@ $(document).ready(function () {
       dataType: dataType,
       type: 'GET',
       success: function (data) {
-        loadResults(data, source);
+        // give API data to getSavedUrls, just to pass it on to loadResults later
+        getSavedUrls(data, source);
       }
     });
   }
 
-  // Format GET response, append to page
-  function loadResults (data, source) {
+  // GET '/users/id/stars' to obtain currentUser's list of saved urls
+  // apiData param corresponds to data from getJSON()
+  // source param corresponds to api source (eg. wikipedia)
+  function getSavedUrls (apiData, source) {
+    $.ajax({
+      url: '/users/getUrls/stars',
+      type: 'GET',
+      success: function (savedUrlsArr) {
+        // hand everything to loadResults to append to page
+        loadResults(apiData, source, savedUrlsArr);
+      }
+    });
+  }
+
+  // checks if a particular url is contained in user's savedUrlsArr
+  function isSavedBefore (url, arr) {
+    console.log('checking if', url, ' has been saved before');
+    for (var i = 0; i < arr.length; i++) {
+      if (url === arr[i].url) {
+        console.log('yes, saved before!');
+        return true;
+      }
+    }
+    console.log('nope, not saved before');
+    return false;
+  }
+
+  // --- Format GET response, append to page ---
+  // data = api response JSON
+  // source = api source (eg. wikipedia)
+  // savedUrlsArr = arr containing all of currentUser's savedUrls
+  function loadResults (data, source, savedUrlsArr) {
+    console.log('inside loadResults, savedUrlsArr is:', savedUrlsArr);
     // remove previous search results
     $('#wikipedia .row').remove(); // every result card
     $('#wikipedia p').remove(); // 'show x more results...'
@@ -82,7 +114,14 @@ $(document).ready(function () {
         'type': 'button',
         'url': url
       }).addClass('btn btn-default star-btn');
-      var glyphicon = $('<span>').addClass('glyphicon glyphicon-star-empty');
+
+      var glyphicon = '';
+      if (isSavedBefore(url, savedUrlsArr)) {
+        glyphicon = $('<span>').addClass('glyphicon glyphicon-star');
+        starBtn.addClass('starred'); // indicate to frontend that it's starred
+      } else if (!isSavedBefore(url, savedUrlsArr)) {
+        glyphicon = $('<span>').addClass('glyphicon glyphicon-star-empty');
+      }
 
       // append card elements from child to parent, then to page
       a.append(title, excerpt);
@@ -173,7 +212,7 @@ $(document).ready(function () {
           $(thatStarBtn).removeClass('starred');
           console.log('thatStarBtn after:', $(thatStarBtn));
           // change star glyphicon to star-empty
-          starGlyph = $(thatStarBtn).vchildren()[0];
+          starGlyph = $(thatStarBtn).children()[0];
           $(starGlyph).addClass('glyphicon-star-empty').removeClass('glyphicon-star');
         }
       }

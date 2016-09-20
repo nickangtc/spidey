@@ -65,16 +65,21 @@ app.get('/', function (req, res) {
 // READ: get user's starred urls (user must be logged in)
 app.get('/users/:id/stars', isLoggedIn, function (req, res) {
   console.log('GET /users/id/stars request received');
-  console.log('id:', req.params.id);
+  console.log('id:', req.user.id);
 
   db.savedUrl.findAll({
     where: {
-      userid: req.params.id
+      userid: req.user.id
     }
   }).then(function (data) {
     console.log('retrieved all instances of user\'s saved urls from db');
-    console.log('data:', data);
-    res.render('user_starred', { data: data });
+    // return data as json to function in main.js
+    if (req.params.id === 'getUrls') {
+      res.json(data);
+    } else {
+      // return rendered page with data
+      res.render('user_starred', { data: data });
+    }
   });
 });
 
