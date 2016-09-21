@@ -267,4 +267,8 @@ $(document).ready(function () {
   //   console.log('ev.target', ev.target);
   // }
 
+  // $('#myModal').on('show.bs.modal', function () {
+  //   $('.modal-content').css('height', $(window).height() * 0.9);
+  // });
+
 }); // end document ready function
