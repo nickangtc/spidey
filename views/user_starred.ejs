@@ -23,7 +23,7 @@
               <a class="btn btn-default" href="<%= data[i].dataValues.url %>" target="_blank">
                 <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
               </a>
-              <button class="btn btn-default delete-link" type="button" href="<%= data[i].dataValues.url %>">
+              <button class="btn btn-default starred update-link" type="button" url="<%= data[i].dataValues.url %>">
                 <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
               </button>
             </span>
@@ -48,7 +48,7 @@
               <a class="btn btn-default" href="<%= data[i].dataValues.url %>" target="_blank">
                 <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
               </a>
-              <button class="btn btn-default delete-link" type="button" href="<%= data[i].dataValues.url %>">
+              <button class="btn btn-default starred update-link" type="button" url="<%= data[i].dataValues.url %>">
                 <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
               </button>
             </span>
@@ -66,25 +66,32 @@
 // project: https://clipboardjs.com/ - click button to copy text
 var clipboard = new Clipboard('.clipboard');
 
-$('.delete-link').on('click', function (ev) {
+$('.update-link').on('click', function (ev) {
   ev.preventDefault();
-  var route = ev.currentTarget.pathname; // pathname = href val
-  // var li = ev.currentTarget.parentNode;
-  var urlToDelete = li.attributes.url.value;
+  var urlToUpdate = $(this).attr('url');
+  var action = '';
+  var span = $(this)[0].children[0];
+
+  // check if the link is currently starred (.starred class)
+  if ($(this).hasClass('starred')) {
+    action = 'delete';
+    $(span).removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+    $(this).removeClass('starred');
+  } else if (!$(this).hasClass('starred')) {
+    action = 'create';
+    $(span).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+    $(this).addClass('starred');
+  }
 
   // delete url in backend database
   $.ajax({
     type: 'POST',
-    url: route,
+    url: '/stars/update',
     data: {
-      url: urlToDelete,
-      action: 'delete'
-    },
-    success: function (data) {
-      // fadeOut element from page
-      // (on page refresh, element already deleted from db)
-      $(li).fadeOut();
+      url: urlToUpdate,
+      action: action
     }
-  })
-});
+  });
+})
+
 </script>

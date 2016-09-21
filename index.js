@@ -146,6 +146,7 @@ app.get('/stars/update', isLoggedIn, function (req, res) {
 app.post('/stars/update', function (req, res) {
   console.log('STAR REQ.BODY', req.body);
   console.log('REQ.USER:', req.user);
+  console.log('REQUEST IS TO...', req.body.action);
 
   if (req.user === undefined) {
     console.log('USER NOT LOGGED IN - REFUSING POST REQ');
@@ -167,8 +168,6 @@ app.post('/stars/update', function (req, res) {
           url: req.body.url
         }
       }).then(function (user, created) {
-        console.log('user found/created:', user);
-        console.log('created?:', created);
         res.json({
           status: 'create successful'
         });
