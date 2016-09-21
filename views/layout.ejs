@@ -47,25 +47,8 @@
             </div>
           </form>
           <ul class="nav navbar-nav navbar-right">
-            <!-- Saved urls button -->
 
-            <% if (currentUser) { %>
-              <li>
-                <a href="/users/<%= currentUser.id %>/stars">
-                  <span class="glyphicon glyphicon-star"></span>
-                  Saved
-                </a>
-              </li>
-            <% } else if (!currentUser) { %>
-              <li>
-                <a href="/signup">
-                  <span class="glyphicon glyphicon-star"></span>
-                  Saved
-                </a>
-              </li>
-            <% } %>
-
-
+            <!-- Dropdown -->
             <% if (currentUser) { %>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -74,6 +57,10 @@
                 <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="/users/<%= currentUser.id %>/edit">Edit profile</a></li>
+                <li><a href="/users/<%= currentUser.id %>/stars">
+                  Clippings
+                  <!-- <span class="glyphicon glyphicon-star"></span> -->
+                </a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="/logout">Logout</a></li>
               </ul>
