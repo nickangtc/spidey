@@ -83,25 +83,17 @@ $(document).ready(function () {
     });
   }
 
-  // checks if a particular url is contained in user's savedUrlsArr
-  function isSavedBefore (url, arr) {
-    for (var i = 0; i < arr.length; i++) {
-      if (url === arr[i].url) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   // --- Format GET response, append to page ---
   // data = api response JSON
   // source = api source (eg. wikipedia)
   // savedUrlsArr = arr containing all of currentUser's savedUrls
   function loadResults (data, source, savedUrlsArr) {
-    console.log('inside loadResults, savedUrlsArr is:', savedUrlsArr);
+    var sourceId = '#' + source;
+    console.log('sourceId:', sourceId);
+
     // remove previous search results
-    $('#wikipedia .row').remove(); // every result card
-    $('#wikipedia p').remove(); // 'show x more results...'
+    $(sourceId + ' .row').remove(); // every result card
+    $(sourceId + ' p').remove(); // 'show x more results...'
     var numOfResults = data[1].length;
     var numOfCards = numOfResults;
 
@@ -157,14 +149,14 @@ $(document).ready(function () {
       col.append(a, inputGroup);
       row.append(col);
       // append card to page
-      $('#wikipedia').append(row);
-    }
+      $(sourceId).append(row);
+    } // -- end for loop --
 
     // display 'show x more results...' if applicable
     if (numOfResults > RESULTS_LIMIT) {
       var moreResults = numOfResults - RESULTS_LIMIT;
       var hidden = $('<p>').text('show ' + moreResults + ' more results...');
-      $('#wikipedia').append(hidden);
+      $(sourceId).append(hidden);
     }
 
     // ============= Star Buttons click handler =============
@@ -271,6 +263,16 @@ $(document).ready(function () {
     // change star glyphicon to star-empty
     var starGlyph = $(thatStarBtn).children()[0];
     $(starGlyph).addClass('glyphicon-star-empty').removeClass('glyphicon-star');
+  }
+
+  // checks if a particular url is contained in user's savedUrlsArr
+  function isSavedBefore (url, arr) {
+    for (var i = 0; i < arr.length; i++) {
+      if (url === arr[i].url) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // ================= Frontend form validation logic ==================
