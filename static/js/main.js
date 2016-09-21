@@ -21,15 +21,19 @@ $(document).ready(function () {
     $('#search-term').text(SEARCH_STR);
 
     // send GET request to APIs
+    console.log('search button clicked, calling getJSON with source = wikipedia');
     getJSON('wikipedia');
-    // getJSON('nyt');
+    getJSON('nyt');
   });
 
   // ========== Functions ===========
+
   // Send AJAX GET requests to external APIs
+  // sources covered: 'wikipedia', 'nyt', 'guardian'
   function getJSON (source) {
     var url = '';
     if (source === 'wikipedia') {
+      console.log('inside getJSON(), source = wikipedia');
       url = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=';
 
       $.ajax({
@@ -37,7 +41,9 @@ $(document).ready(function () {
         dataType: 'jsonp',
         method: 'GET',
         success: function (data) {
+          console.log('obtained wikipedia data:', data);
           // give API data to getSavedUrls, just to pass it on to loadResults later
+          console.log('calling getSavedUrls(data, source)');
           getSavedUrls(data, source);
         },
         error: function (err) {
@@ -45,6 +51,7 @@ $(document).ready(function () {
         }
       });
     } else if (source === 'nyt') {
+      console.log('inside getJSON(), source = nyt');
       url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
       url += '?' + $.param({
         'api-key': '1a6e15371cf94b97a62802a17d365145',
@@ -64,6 +71,9 @@ $(document).ready(function () {
           throw err;
         }
       });
+    } else if (source === 'guardian') {
+      console.log('inside getJSON(), source = guardian');
+      
     }
   }
 
@@ -71,14 +81,23 @@ $(document).ready(function () {
   // apiData param corresponds to data from getJSON()
   // source param corresponds to api source (eg. wikipedia)
   function getSavedUrls (apiData, source) {
+    console.log('inside getSavedUrls');
     $.ajax({
-      url: '/users/getUrls/stars',
+      url: '/getstars',
       type: 'GET',
       success: function (data) { // data = savedUrlsArr
         // hand everything to loadResults to append to page
         // server returns error if user is not logged in
+        console.log('data inside getSavedUrls:', data);
         if (data.status !== 'error') {
+          console.log('data.status inside getSavedUrls - ', data.status);
+          console.log('previously starred array from server:', data);
+          console.log('calling loadResults(apidata, source, data)');
           loadResults(apiData, source, data);
+        } else {
+          console.log('server returned with no previously stored array bc user not signed in');
+          console.log('calling loadResults(apidata, source)');
+          loadResults(apiData, source);
         }
       }
     });
@@ -89,31 +108,42 @@ $(document).ready(function () {
   // source = api source (eg. wikipedia)
   // savedUrlsArr = arr containing all of currentUser's savedUrls
   function loadResults (data, source, savedUrlsArr) {
+    console.log('inside loadResults()');
+    console.log('params passed in here are... data:', data, ' source:', source, ' savedUrlsArr:', savedUrlsArr);
     var sourceId = '#' + source;
     console.log('sourceId:', sourceId);
 
     // remove previous search results
     $(sourceId + ' .row').remove(); // every result card
     $(sourceId + ' p').remove(); // 'show x more results...'
-    var numOfResults = data[1].length;
-    var numOfCards = numOfResults;
-
-    // always display all results, unless RESULTS_LIMIT < num of results
-    if (numOfResults >= RESULTS_LIMIT) {
-      numOfCards = RESULTS_LIMIT;
-    }
 
     var title = '';
     var excerpt = '';
     var url = '';
 
+    var numOfResults = '';
+    var numOfCards = '';
+    if (source === 'wikipedia') {
+      numOfResults = data[1].length;
+    } else if (source === 'nyt') {
+      numOfResults = data.response.docs.length;
+    }
+    // number of results displayed filter
+    if (numOfResults >= RESULTS_LIMIT) {
+      numOfCards = RESULTS_LIMIT;
+    } else {
+      numOfCards = numOfResults;
+    }
+
     for (var i = 0; i < numOfCards; i++) {
       if (source === 'wikipedia') {
-        title = $('<h4>').text(data[1][i] + ' ');
-        excerpt = $('<p>').text(data[2][i] + ' ');
+        title = $('<h4>').text(data[1][i]);
+        excerpt = $('<p>').text(data[2][i]);
         url = data[3][i];
       } else if (source === 'nyt') {
         title = $('<h4>').text(data.response.docs[i].headline.main);
+        excerpt = $('<p>').text(data.response.docs[i].snippet);
+        url = data.response.docs[i].web_url;
       }
 
       // create html elements before appending to page
@@ -276,6 +306,9 @@ $(document).ready(function () {
 
   // checks if a particular url is contained in user's savedUrlsArr
   function isSavedBefore (url, arr) {
+    if (arr === undefined) {
+      return false;
+    }
     for (var i = 0; i < arr.length; i++) {
       if (url === arr[i].url) {
         return true;
@@ -307,5 +340,4 @@ $(document).ready(function () {
   // $('#myModal').on('show.bs.modal', function () {
   //   $('.modal-content').css('height', $(window).height() * 0.9);
   // });
-
 }); // end document ready function

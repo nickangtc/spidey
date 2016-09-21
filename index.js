@@ -42,8 +42,6 @@ app.use(function (req, res, next) {
   // before every route, attach the flash messages and current user to res.locals
   res.locals.alerts = req.flash();
   res.locals.currentUser = req.user;
-  console.log('Flash res.locals.alerts:', res.locals.alerts);
-  console.log('Flash res.locals.currentUser:', res.locals.currentUser);
   next();
 });
 
@@ -62,31 +60,37 @@ app.get('/', function (req, res) {
   // }
 });
 
-// READ: get user's starred urls (user must be logged in)
-app.get('/users/:id/stars', isLoggedIn, function (req, res) {
-  console.log('GET /users/id/stars request received');
-  console.log('id:', req.user.id);
-
-  // if user is not logged in
+// READ: return previously starred array to frontend if user is logged in
+app.get('/getstars', function (req, res) {
+  console.log('GET /getstars');
   if (req.user === undefined) {
+    console.log('getstars FAILED - user not logged in');
     res.json({
       status: 'error'
     });
+  } else if (req.user) {
+    console.log('getstars SUCCESS - handing back to frontend');
+    db.savedUrl.findAll({
+      where: {
+        userid: req.user.id
+      }
+    }).then(function (data) {
+      res.json(data);
+    });
   }
+});
+
+// READ: get user's starred urls (user must be logged in)
+app.get('/users/:id/stars', isLoggedIn, function (req, res) {
+  console.log('GET /users/id/stars request received');
 
   db.savedUrl.findAll({
     where: {
       userid: req.user.id
     }
   }).then(function (data) {
-    console.log('retrieved all instances of user\'s saved urls from db');
-    // return data as json to function in main.js
-    if (req.params.id === 'getUrls') {
-      res.json(data);
-    } else {
-      // return rendered page with data
-      res.render('user_starred', { data: data });
-    }
+    // return rendered page with data
+    res.render('user_starred', { data: data });
   });
 });
 
@@ -131,6 +135,7 @@ app.delete('/users/:id', function (req, res) {
 
 // GET: used for checking if user is logged in
 app.get('/stars/update', isLoggedIn, function (req, res) {
+  console.log('GET /stars/update');
   if (req.user === undefined) {
     res.json({
       status: false
