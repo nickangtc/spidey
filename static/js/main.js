@@ -47,23 +47,23 @@ $(document).ready(function () {
     $.ajax({
       url: '/users/getUrls/stars',
       type: 'GET',
-      success: function (savedUrlsArr) {
+      success: function (data) { // data = savedUrlsArr
         // hand everything to loadResults to append to page
-        loadResults(apiData, source, savedUrlsArr);
+        // server returns error if user is not logged in
+        if (data.status !== 'error') {
+          loadResults(apiData, source, data);
+        }
       }
     });
   }
 
   // checks if a particular url is contained in user's savedUrlsArr
   function isSavedBefore (url, arr) {
-    console.log('checking if', url, ' has been saved before');
     for (var i = 0; i < arr.length; i++) {
       if (url === arr[i].url) {
-        console.log('yes, saved before!');
         return true;
       }
     }
-    console.log('nope, not saved before');
     return false;
   }
 
@@ -157,7 +157,7 @@ $(document).ready(function () {
       }
     });
 
-    // Send AJAX POST/DELETE requests to own server
+    // Send AJAX POST requests to own server
     function updateSavedUrls (action, route, urlToUpdate) {
       // action: 'create' or 'delete' - used in node backend
       $.ajax({
@@ -170,9 +170,9 @@ $(document).ready(function () {
         success: function (data) {
           console.log('data from server received:', data);
           var option = '';
-          if (action === 'create') {
+          if (action === 'create' && data.status !== 'error') {
             option = 'star';
-          } else if (action === 'delete') {
+          } else if (action === 'delete' && data.status !== 'error') {
             option = 'unstar';
           }
           updateStarIcon(urlToUpdate, option, data);
@@ -246,4 +246,25 @@ $(document).ready(function () {
       }
     });
   } // end loadResults
-});
+
+  // ================= Frontend form validation logic ==================
+  // inputs to be validated have .validate class
+
+  // $('.validate').on('focusout', validateInput);
+  //
+  // function validateInput (ev) {
+  //   var input = $(this);
+  //   var span = $('<span>');
+  //
+  //   console.log(span);
+  //
+  //   input.prepend(span);
+  //   console.log('ev', ev);
+  //   console.log('$(this):', input);
+  //   console.log('$(this).siblings():', input.siblings());
+  //   console.log('$(this).siblings()[0]:', input.siblings()[0]);
+  //   console.log('$(this).siblings().prevObject:', input.siblings().prevObject);
+  //   console.log('ev.target', ev.target);
+  // }
+
+}); // end document ready function

@@ -67,6 +67,13 @@ app.get('/users/:id/stars', isLoggedIn, function (req, res) {
   console.log('GET /users/id/stars request received');
   console.log('id:', req.user.id);
 
+  // if user is not logged in
+  if (req.user === undefined) {
+    res.json({
+      status: 'error'
+    });
+  }
+
   db.savedUrl.findAll({
     where: {
       userid: req.user.id
@@ -136,11 +143,12 @@ app.get('/stars/update', isLoggedIn, function (req, res) {
 });
 
 // CREATE/DESTROY: savedUrls
-app.post('/stars/update', isLoggedIn, function (req, res) {
+app.post('/stars/update', function (req, res) {
   console.log('STAR REQ.BODY', req.body);
   console.log('REQ.USER:', req.user);
 
   if (req.user === undefined) {
+    console.log('USER NOT LOGGED IN - REFUSING POST REQ');
     res.json({
       status: 'error'
       // ^ don't change this value - frontend dependence
