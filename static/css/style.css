@@ -21,6 +21,9 @@ li {
   line-height: 50px;
 }
 
+.aButton {
+  background-color: red;
+}
 .result-card {
   /*border: 1px solid black;*/
   /*border-radius: 5px;*/

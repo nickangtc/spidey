@@ -4,32 +4,72 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
-      <h2>Your clippings</h2>
+      <h2>Clippings</h2>
 
-      <ul>
+      <p>
+        Note: Unstarring is equivalent to binning a clipping.
+      </p>
 
-        <% for (var i = 0; i < data.length; i++) { %>
-          <li url="<%= data[i].dataValues.url %>">
-            <a href="<%= data[i].dataValues.url %>" target="_blank">
-              <%= data[i].dataValues.url %>
-            </a>
-            <a href="/stars/update" class="delete-link">
-              <span class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></span>
-            </a>
-          </li>
-        <% } %>
+      <h3>This session</h3>
 
-      </ul>
+      <% for (var i = 0; i < data.length; i++) { %>
+        <div class="col-sm-12">
+          <div class="input-group">
+            <input id="link-<%= i %>" type="text" class="form-control" value="<%= data[i].dataValues.url %>" onclick="this.select();">
+            <span class="input-group-btn">
+              <button class="btn btn-default clipboard" type="button" data-clipboard-target="#link-<%= i %>">
+                <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+              </button>
+              <a class="btn btn-default" href="<%= data[i].dataValues.url %>" target="_blank">
+                <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+              </a>
+              <button class="btn btn-default delete-link" type="button" href="<%= data[i].dataValues.url %>">
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+              </button>
+            </span>
+          </div><!-- /input-group -->
+        </div>
+      <% } %>
 
     </div>
   </div>
-</div>
+
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+      <h3>Previous sessions</h3>
+      <% for (var i = 0; i < data.length; i++) { %>
+        <div class="col-sm-12">
+          <div class="input-group">
+            <input id="link-<%= i %>" type="text" class="form-control" value="<%= data[i].dataValues.url %>" onclick="this.select();">
+            <span class="input-group-btn">
+              <button class="btn btn-default clipboard" type="button" data-clipboard-target="#link-<%= i %>">
+                <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+              </button>
+              <a class="btn btn-default" href="<%= data[i].dataValues.url %>" target="_blank">
+                <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+              </a>
+              <button class="btn btn-default delete-link" type="button" href="<%= data[i].dataValues.url %>">
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+              </button>
+            </span>
+          </div><!-- /input-group -->
+        </div>
+      <% } %>
+
+    </div>
+  </div>
+</div><!-- /container -->
 
 <script>
+
+// intialise clipboard.js, loaded in layout.ejs
+// project: https://clipboardjs.com/ - click button to copy text
+var clipboard = new Clipboard('.clipboard');
+
 $('.delete-link').on('click', function (ev) {
   ev.preventDefault();
   var route = ev.currentTarget.pathname; // pathname = href val
-  var li = ev.currentTarget.parentNode;
+  // var li = ev.currentTarget.parentNode;
   var urlToDelete = li.attributes.url.value;
 
   // delete url in backend database
