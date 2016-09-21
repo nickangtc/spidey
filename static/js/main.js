@@ -22,6 +22,7 @@ $(document).ready(function () {
 
     // send GET request to APIs
     getJSON('wikipedia');
+    // getJSON('nyt');
   });
 
   // ========== Functions ===========
@@ -102,15 +103,23 @@ $(document).ready(function () {
       numOfCards = RESULTS_LIMIT;
     }
 
+    var title = '';
+    var excerpt = '';
+    var url = '';
+
     for (var i = 0; i < numOfCards; i++) {
-      var url = data[3][i];
+      if (source === 'wikipedia') {
+        title = $('<h4>').text(data[1][i] + ' ');
+        excerpt = $('<p>').text(data[2][i] + ' ');
+        url = data[3][i];
+      } else if (source === 'nyt') {
+        title = $('<h4>').text(data.response.docs[i].headline.main);
+      }
 
       // create html elements before appending to page
       // elements for results content
       var row = $('<div>').addClass('row');
       var col = $('<div>').addClass('col-sm-12 result-card');
-      var title = $('<h4>').text(data[1][i] + ' ');
-      var excerpt = $('<p>').text(data[2][i] + ' ');
 
       // when clicked launches Modal with relevant iframe
       var a = $('<a>').attr({
