@@ -192,4 +192,5 @@ app.post('/stars/update', function (req, res) {
   }
 });
 
-app.listen(3000);
+// related to Heroku deployment
+app.listen(process.env.PORT || 3000);
