@@ -3,52 +3,23 @@
   <head>
     <meta charset="utf-8">
     <title>layout.ejs</title>
-    <!-- External libraries -->
+    <!-- EXTERNAL -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css//font-awesome-4.6.3/css/font-awesome.css">
     <script src="/js/jquery-3.1.0.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <!-- clipboard.js for one click copy functionality -->
     <script src="/js/clipboard.js"></script>
-    <!-- Custom -->
+    <!-- Bootstrap 3 validator: http://1000hz.github.io/bootstrap-validator/ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js" type="text/javascript"></script>
+    <!-- CUSTOM -->
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/main.js"></script>
   </head>
-  <body>
-    <!-- Modal for login -->
-    <div class="modal fade signup-login-modal" tabindex="-1" role="dialog" aria-labelledby="">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          </div>
-
-          <!-- LOGIN FORM -->
-          <div class="modal-body">
-            <form action="/login" method="POST">
-              <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" name="email" class="form-control" id="email" placeholder="mary@doe.com" required>
-              </div>
-              <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" name="password" class="form-control" id="password" placeholder="********" required>
-              </div>
-
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-
-          </div>
-
-          <div class="modal-footer">
-            <a href="/signup" class="btn btn-default">Signup</a>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
+  <body data-spy="scroll" data-target="#scrollspy-me">
 
     <!-- ============= Navbar ============== -->
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav id="scrollspy-me" class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1">
@@ -70,8 +41,8 @@
             <li class="active">
               <a href="#wikipedia">Wikipedia<span class="sr-only">(current)</span></a>
             </li>
-            <li><a href="#google">NYT</a></li>
-            <li><a href="#">Guardian</a></li>
+            <li><a href="#nyt">NYT</a></li>
+            <li><a href="#guardian">Guardian</a></li>
           </ul>
           <!-- navbar right -->
           <!-- TODO: form role="search" might be redundant -->
@@ -88,7 +59,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <span class="glyphicon glyphicon-user"></span>
-                <strong><%= currentUser.firstName.toUpperCase() %></strong>
+                <%= currentUser.firstName.toUpperCase() %>
                 <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="/users/<%= currentUser.id %>/edit">Edit profile</a></li>
@@ -100,13 +71,6 @@
                 <li><a href="/logout">Logout</a></li>
               </ul>
             </li>
-
-            <!-- var a = $('<a>').attr({
-              'url': url, // hidden data, value is set as iframe 'src' when modal is triggered
-              'data-toggle': 'modal',
-              'data-target': '.iframe-modal-lg',
-              'class': 'modal-trigger'
-            }); -->
 
             <% } else if (!currentUser) { %>
               <li>

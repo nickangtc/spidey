@@ -28,8 +28,40 @@
   </div>
 </div>
 
-<!-- How many results to show (ask user) -->
+<!-- Modal for login -->
+<div class="modal fade signup-login-modal" tabindex="-1" role="dialog" aria-labelledby="">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        Welcome back!
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
 
+      <!-- LOGIN FORM -->
+      <div class="modal-body">
+        <form action="/login" method="POST" role="form" data-toggle="validator">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" class="form-control" id="email" placeholder="mary@doe.com" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" class="form-control" id="password" placeholder="********" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+      </div>
+
+      <div class="modal-footer">
+        Not registered yet?
+        <a href="/signup" class="btn btn-success">Signup</a>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- =============== Results =================== -->
 <div class="container-fluid">
@@ -47,7 +79,7 @@
 </div>
 
 <div class="container">
-
+  <!-- How many results to show (ask user) -->
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
       Number of results per search:

@@ -10,11 +10,14 @@ console.log('javascript working');
 $(document).ready(function () {
   var SEARCH_STR = '';
   var RESULTS_LIMIT = 5; // will be updated based on user input later
-  console.log('RESULTS_LIMIT:', RESULTS_LIMIT);
 
   // ======= Search form handler ========
   $('#submit-btn').on('click', function (ev) {
     ev.preventDefault();
+
+    var throbber = $('<i>').addClass('fa fa-spinner fa-2x fa-spin centralise');
+    $('#wikipedia, #nyt, #guardian').append(throbber);
+
     SEARCH_STR = $('form input').val();
     RESULTS_LIMIT = $('#results-limit').val();
     console.log('search string stored as: ' + SEARCH_STR);
@@ -140,6 +143,9 @@ $(document).ready(function () {
     console.log('params passed in here are... data:', data, ' source:', source, ' savedUrlsArr:', savedUrlsArr);
     var sourceId = '#' + source;
     console.log('sourceId:', sourceId);
+
+    // remove throbber
+    $(sourceId + ' i').fadeOut();
 
     // remove previous search results
     $(sourceId + ' .row').remove(); // every result card

@@ -8,22 +8,36 @@
       <h2>Sign up</h2>
       <h4>Favourite urls and refer to them anytime you want</h4>
 
-      <form action="/signup" method="post">
-        <div class="form-group">
-          <label for="first-name">First name</label>
+      <form action="/signup" method="post" data-toggle="validator" role="form">
+
+        <div class="form-group has-feedback">
+          <label for="first-name" class="control-label">First name</label>
           <input type="text" name="firstName" class="form-control validate" id="first-name" placeholder="Mary" required>
         </div>
-        <div class="form-group">
-          <label for="last-name">Last name</label>
+
+        <div class="form-group has-feedback">
+          <label for="last-name" class="control-label">Last name</label>
           <input type="text" name="lastName" class="form-control validate" id="last-name" placeholder="Doe" required>
         </div>
-        <div class="form-group">
-          <label for="email">Email</label>
+
+        <div class="form-group has-feedback">
+          <label for="email" class="control-label">Email</label>
           <input type="email" name="email" class="form-control validate" id="email" placeholder="mary@doe.com" required>
         </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" name="password" class="form-control validate" id="password" required>
+
+        <div class="form-group has-feedback">
+        <label for="password" class="control-label">Password</label>
+        <input
+          type="password"
+          name="password"
+          data-minlength="6"
+          data-error="For security, use something at least 8 characters long!"
+          class="form-control validate"
+          id="password"
+          placeholder="*******"
+          required>
+        </input>
+          <div class="help-block with-errors"></div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
