@@ -15,6 +15,9 @@ a:hover {
 li {
   list-style: none;
 }
+select {
+  display: inline;
+}
 
 #search-term {
   text-decoration: underline;

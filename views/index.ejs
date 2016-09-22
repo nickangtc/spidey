@@ -28,6 +28,9 @@
   </div>
 </div>
 
+<!-- How many results to show (ask user) -->
+
+
 <!-- =============== Results =================== -->
 <div class="container-fluid">
   <!-- Display user messages -->
@@ -38,11 +41,30 @@
   </div>
   <!-- Search term message display -->
   <div class="row text-center">
-    <h4>Current search: <span id="search-term">lorem ipsum</span></h4>
+    <h4>Current search: <span class="lead" id="search-term"></span></h4>
   </div>
+
 </div>
 
 <div class="container">
+
+  <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+      Number of results per search:
+      <select id="results-limit" class="">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option selected>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+        <option>9</option>
+        <option>10</option>
+      </select>
+    </div>
+  </div>
 
   <!-- =========== Results display stage ============ -->
   <!-- results for Wikipedia search -->
@@ -56,6 +78,7 @@
   <div class="row">
     <div id="nyt" class="col-sm-8 col-sm-offset-2">
       <h2>The New York Times</h2>
+      <p>They count cookies. I've heard you can eat them up by clearing your browser cookie history...</p>
       <hr>
     </div><!-- /.col-sm-8 -->
   </div><!-- /.row -->
@@ -64,6 +87,7 @@
   <div class="row">
     <div id="guardian" class="col-sm-8 col-sm-offset-2">
       <h2>The Guardian</h2>
+      <p>They blocked same-window viewing. Please open in new tab to view articles from Guardian.</p>
       <hr>
     </div><!-- /.col-sm-8 -->
   </div><!-- /.row -->

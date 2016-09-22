@@ -9,12 +9,14 @@ console.log('javascript working');
 
 $(document).ready(function () {
   var SEARCH_STR = '';
-  var RESULTS_LIMIT = 5;
+  var RESULTS_LIMIT = 5; // will be updated based on user input later
+  console.log('RESULTS_LIMIT:', RESULTS_LIMIT);
 
   // ======= Search form handler ========
   $('#submit-btn').on('click', function (ev) {
     ev.preventDefault();
     SEARCH_STR = $('form input').val();
+    RESULTS_LIMIT = $('#results-limit').val();
     console.log('search string stored as: ' + SEARCH_STR);
 
     // show search term on page
@@ -24,6 +26,7 @@ $(document).ready(function () {
     console.log('search button clicked, calling getJSON with source = wikipedia');
     getJSON('wikipedia');
     getJSON('nyt');
+    getJSON('guardian');
   });
 
   // ========== Functions ===========
@@ -32,6 +35,8 @@ $(document).ready(function () {
   // sources covered: 'wikipedia', 'nyt', 'guardian'
   function getJSON (source) {
     var url = '';
+
+    // WIKIPEDIA
     if (source === 'wikipedia') {
       console.log('inside getJSON(), source = wikipedia');
       url = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=';
@@ -50,13 +55,15 @@ $(document).ready(function () {
           throw err;
         }
       });
+
+      // NEW YORK TIMES
     } else if (source === 'nyt') {
       console.log('inside getJSON(), source = nyt');
       url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
       url += '?' + $.param({
         'api-key': '1a6e15371cf94b97a62802a17d365145',
         'q': SEARCH_STR,
-        'begin_date': '20160101'
+        'begin_date': '20140101'
       });
 
       $.ajax({
@@ -71,9 +78,30 @@ $(document).ready(function () {
           throw err;
         }
       });
+
+      // THE GUARDIAN
     } else if (source === 'guardian') {
       console.log('inside getJSON(), source = guardian');
-      
+      url = 'http://content.guardianapis.com/search';
+      url += '?' + $.param({
+        'api-key': 'e8eb4ddb-47ce-4400-9edc-42c41e3f2a2f',
+        'q': SEARCH_STR,
+        'from-date': '2014-01-01',
+        'section': 'news'
+      });
+
+      $.ajax({
+        url: url,
+        dataType: 'json',
+        method: 'GET',
+        success: function (data) {
+          getSavedUrls(data, source);
+          console.log(data);
+        },
+        error: function (err) {
+          throw err;
+        }
+      });
     }
   }
 
@@ -105,7 +133,7 @@ $(document).ready(function () {
 
   // --- Format GET response, append to page ---
   // data = api response JSON
-  // source = api source (eg. wikipedia)
+  // source = api source (eg. wikipedia, nyt, guardian)
   // savedUrlsArr = arr containing all of currentUser's savedUrls
   function loadResults (data, source, savedUrlsArr) {
     console.log('inside loadResults()');
@@ -127,6 +155,8 @@ $(document).ready(function () {
       numOfResults = data[1].length;
     } else if (source === 'nyt') {
       numOfResults = data.response.docs.length;
+    } else if (source === 'guardian') {
+      numOfResults = data.response.results.length;
     }
     // number of results displayed filter
     if (numOfResults >= RESULTS_LIMIT) {
@@ -135,17 +165,29 @@ $(document).ready(function () {
       numOfCards = numOfResults;
     }
 
+    // each loop creates and appends individual results to DOM
     for (var i = 0; i < numOfCards; i++) {
+      // WIKIPEDIA
       if (source === 'wikipedia') {
         title = $('<h4>').text(data[1][i]);
         excerpt = $('<p>').text(data[2][i]);
         url = data[3][i];
+
+        // NEW YORK TIMES
       } else if (source === 'nyt') {
         title = $('<h4>').text(data.response.docs[i].headline.main);
         excerpt = $('<p>').text(data.response.docs[i].snippet);
         url = data.response.docs[i].web_url;
+
+        // THE GUARDIAN
+      } else if (source === 'guardian') {
+        title = $('<h4>').text(data.response.results[i].webTitle);
+        excerpt = $('<p>').text('no excerpt available');
+        url = data.response.results[i].webUrl;
+        console.log('guardian...', title, url);
       }
 
+      // Note: No need to amend from here onwards - all works with various APIs
       // create html elements before appending to page
       // elements for results content
       var row = $('<div>').addClass('row');
@@ -191,24 +233,25 @@ $(document).ready(function () {
       $(sourceId).append(row);
     } // -- end for loop --
 
-    // display 'show x more results...' if applicable
-    if (numOfResults > RESULTS_LIMIT) {
-      var moreResults = numOfResults - RESULTS_LIMIT;
-      var hidden = $('<p>').text('show ' + moreResults + ' more results...');
-      $(sourceId).append(hidden);
-    }
+    // // display 'show x more results...' if applicable
+    // if (numOfResults > RESULTS_LIMIT) {
+    //   var moreResults = numOfResults - RESULTS_LIMIT;
+    //   var hidden = $('<p>').text('show ' + moreResults + ' more results...');
+    //   $(sourceId).append(hidden);
+    // }
 
     // ============= Star Buttons click handler =============
     $('.star-btn').on('click', function (ev) {
+      // debugger;
       // url is obtained from 'url' attr of <a>
-      var elem = ev.currentTarget; // element handle
-      var urlStr = elem.attributes.url.nodeValue; // string value
+      var elem = $(this); // element handle
+      var urlStr = $(elem).attr('url'); // string value
       console.log('ev', ev);
 
-      if (!elem.classList.contains('starred')) {
+      if (!elem.hasClass('starred')) {
         // format: updateSavedUrls(method, route, data)
         updateSavedUrls('create', '/stars/update', urlStr);
-      } else if (elem.classList.contains('starred')) {
+      } else if (elem.hasClass('starred')) {
         // ajax DELETE to destroy matching entry in 'star' table in db
         updateSavedUrls('delete', '/stars/update', urlStr);
       }

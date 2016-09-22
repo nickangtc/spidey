@@ -13,21 +13,23 @@
       <h3>This session</h3>
 
       <% for (var i = 0; i < data.length; i++) { %>
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input id="link-<%= i %>" type="text" class="form-control" value="<%= data[i].dataValues.url %>" onclick="this.select();">
-            <span class="input-group-btn">
-              <button class="btn btn-default clipboard" type="button" data-clipboard-target="#link-<%= i %>">
-                <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
-              </button>
-              <a class="btn btn-default" href="<%= data[i].dataValues.url %>" target="_blank">
-                <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-              </a>
-              <button class="btn btn-default starred update-link" type="button" url="<%= data[i].dataValues.url %>">
-                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-              </button>
-            </span>
-          </div><!-- /input-group -->
+        <div class="row" style="margin-top: 5px;">
+          <div class="col-sm-12">
+            <div class="input-group">
+              <input id="link-<%= i %>" type="text" class="form-control" value="<%= data[i].dataValues.url %>" onclick="this.select();">
+              <span class="input-group-btn">
+                <button class="btn btn-default clipboard" type="button" data-clipboard-target="#link-<%= i %>">
+                  <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
+                </button>
+                <a class="btn btn-default" href="<%= data[i].dataValues.url %>" target="_blank">
+                  <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+                </a>
+                <button class="btn btn-default starred update-link" type="button" url="<%= data[i].dataValues.url %>">
+                  <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                </button>
+              </span>
+            </div><!-- /input-group -->
+          </div>
         </div>
       <% } %>
 
@@ -37,25 +39,6 @@
   <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
       <h3>Previous sessions</h3>
-      <% for (var i = 0; i < data.length; i++) { %>
-        <div class="col-sm-12">
-          <div class="input-group">
-            <input id="link-<%= i %>" type="text" class="form-control" value="<%= data[i].dataValues.url %>" onclick="this.select();">
-            <span class="input-group-btn">
-              <button class="btn btn-default clipboard" type="button" data-clipboard-target="#link-<%= i %>">
-                <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
-              </button>
-              <a class="btn btn-default" href="<%= data[i].dataValues.url %>" target="_blank">
-                <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-              </a>
-              <button class="btn btn-default starred update-link" type="button" url="<%= data[i].dataValues.url %>">
-                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-              </button>
-            </span>
-          </div><!-- /input-group -->
-        </div>
-      <% } %>
-
     </div>
   </div>
 </div><!-- /container -->
