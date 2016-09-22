@@ -88,7 +88,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <span class="glyphicon glyphicon-user"></span>
-                <%= currentUser.firstName %>
+                <strong><%= currentUser.firstName.toUpperCase() %></strong>
                 <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="/users/<%= currentUser.id %>/edit">Edit profile</a></li>
@@ -112,7 +112,7 @@
               <li>
                 <a class="modal-trigger" data-toggle="modal" data-target=".signup-login-modal">
                   <span class="glyphicon glyphicon-user"></span>
-                  New/Login
+                  Login
                 </a>
               </li>
             <% } %>
