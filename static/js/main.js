@@ -201,32 +201,55 @@ $(document).ready(function () {
         'class': 'modal-trigger'
       });
 
-      // elements for URL copy field
+      // create URL input field
       var inputGroup = $('<div>').addClass('input-group input-group-sm copy-url');
       var input = $('<input>').attr({
         onclick: 'this.select();',
         type: 'text',
-        value: url
+        value: url,
+        id: 'link-' + source + '-' + i
       }).addClass('form-control');
-      var inputStar = $('<span>').addClass('input-group-btn');
+      var inputGroupBtns = $('<span>').addClass('input-group-btn');
+
+      // --- create and modify STAR button ---
       var starBtn = $('<button>').attr({
         'type': 'button',
         'url': url
       }).addClass('btn btn-default star-btn');
-
-      var glyphicon = '';
+      var starGlyphicon = '';
+      // use the correct star-empty / star glyph based on user's previous star history
       if (isSavedBefore(url, savedUrlsArr)) {
-        glyphicon = $('<span>').addClass('glyphicon glyphicon-star');
+        starGlyphicon = $('<span>').addClass('glyphicon glyphicon-star');
         starBtn.addClass('starred'); // indicate to frontend that it's starred
       } else if (!isSavedBefore(url, savedUrlsArr)) {
-        glyphicon = $('<span>').addClass('glyphicon glyphicon-star-empty');
+        starGlyphicon = $('<span>').addClass('glyphicon glyphicon-star-empty');
       }
+      // nest glyph inside button
+      starBtn.append(starGlyphicon);
 
-      // append card elements from child to parent, then to page
+      // --- create and modify COPY button (one click copy) ---
+      var copyBtn = $('<button>').attr({
+        type: 'button',
+        'data-clipboard-target': '#link-' + source + '-' + i
+      }).addClass('clipboard btn btn-default');
+      var copyGlyphicon = $('<span>').addClass('glyphicon glyphicon-copy');
+      // nest glyph inside button
+      copyBtn.append(copyGlyphicon);
+
+      // --- create and modify GLOBE button (open in new tab) ---
+      var globeBtn = $('<a>').attr({ // yes, it's a hack
+        href: url,
+        target: '_blank'
+      }).addClass('btn btn-default');
+      var globeGlyphicon = $('<span>').addClass('glyphicon glyphicon-globe');
+      // nest glyph inside button
+      globeBtn.append(globeGlyphicon);
+
+      // APPEND ALL THE ABOVE TO PAGE
       a.append(title, excerpt);
-      starBtn.append(glyphicon);
-      inputStar.append(starBtn);
-      inputGroup.append(input, inputStar);
+
+      inputGroupBtns.append(copyBtn, globeBtn, starBtn);
+      inputGroup.append(input, inputGroupBtns);
       col.append(a, inputGroup);
       row.append(col);
       // append card to page
@@ -359,6 +382,10 @@ $(document).ready(function () {
     }
     return false;
   }
+
+  // intialise clipboard.js, loaded in layout.ejs
+  // project: https://clipboardjs.com/ - click button to copy text
+  var clipboard = new Clipboard('.clipboard');
 
   // ================= Frontend form validation logic ==================
   // inputs to be validated have .validate class
