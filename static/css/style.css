@@ -5,6 +5,8 @@ body {
   /* to pad navbar-fixed-top */
   padding-top: 50px;
   padding-bottom: 50px;
+  /* position relative required by bs scrollspy.js */
+  position: relative;
 }
 hr {
   border-color: black;
