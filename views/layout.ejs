@@ -13,6 +13,40 @@
     <script src="/js/main.js"></script>
   </head>
   <body>
+    <!-- Modal for login -->
+    <div class="modal fade signup-login-modal" tabindex="-1" role="dialog" aria-labelledby="">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+
+          <!-- LOGIN FORM -->
+          <div class="modal-body">
+            <form action="/login" method="POST">
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" class="form-control" id="email" placeholder="mary@doe.com" required>
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" class="form-control" id="password" placeholder="********" required>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+          </div>
+
+          <div class="modal-footer">
+            <a href="/signup" class="btn btn-default">Signup</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
     <!-- ============= Navbar ============== -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
@@ -34,10 +68,10 @@
             <!-- What is 'sr-only'? -->
             <!-- TODO: write javascript to toggle "active" class between nav links -->
             <li class="active">
-              <a href="#wikipedia">Wikipedia <span class="sr-only">(current)</span></a>
+              <a href="#wikipedia">Wikipedia<span class="sr-only">(current)</span></a>
             </li>
-            <li><a href="#google">Google</a></li>
-            <li><a href="#">News</a></li>
+            <li><a href="#google">NYT</a></li>
+            <li><a href="#">Guardian</a></li>
           </ul>
           <!-- navbar right -->
           <!-- TODO: form role="search" might be redundant -->
@@ -67,9 +101,16 @@
               </ul>
             </li>
 
+            <!-- var a = $('<a>').attr({
+              'url': url, // hidden data, value is set as iframe 'src' when modal is triggered
+              'data-toggle': 'modal',
+              'data-target': '.iframe-modal-lg',
+              'class': 'modal-trigger'
+            }); -->
+
             <% } else if (!currentUser) { %>
               <li>
-                <a href="/signup">
+                <a class="modal-trigger" data-toggle="modal" data-target=".signup-login-modal">
                   <span class="glyphicon glyphicon-user"></span>
                   New/Login
                 </a>
