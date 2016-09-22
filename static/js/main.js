@@ -1,9 +1,7 @@
 /* global $ */
 
 // TODO: add click handler for star button to save to user account
-
-// newsapi.org apiKey = 9b242e828f7142489a52bae448e8f9f8
-// NYT apikey = 1a6e15371cf94b97a62802a17d365145
+// TODO: some useful code snippets can be found at end of this file
 
 console.log('javascript working');
 
@@ -15,18 +13,18 @@ $(document).ready(function () {
   $('#submit-btn').on('click', function (ev) {
     ev.preventDefault();
 
-    var throbber = $('<i>').addClass('fa fa-spinner fa-2x fa-spin centralise');
+    // display loading spinner
+    var throbber = $('<i>').addClass('fa fa-spinner fa-2x fa-spin');
     $('#wikipedia, #nyt, #guardian').append(throbber);
 
+    // extract search string and results limit inputs
     SEARCH_STR = $('form input').val();
     RESULTS_LIMIT = $('#results-limit').val();
-    console.log('search string stored as: ' + SEARCH_STR);
 
     // show search term on page
     $('#search-term').text(SEARCH_STR);
 
     // send GET request to APIs
-    console.log('search button clicked, calling getJSON with source = wikipedia');
     getJSON('wikipedia');
     getJSON('nyt');
     getJSON('guardian');
@@ -39,9 +37,8 @@ $(document).ready(function () {
   function getJSON (source) {
     var url = '';
 
-    // WIKIPEDIA
+    // WIKIPEDIA API CALL
     if (source === 'wikipedia') {
-      console.log('inside getJSON(), source = wikipedia');
       url = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=';
 
       $.ajax({
@@ -49,9 +46,7 @@ $(document).ready(function () {
         dataType: 'jsonp',
         method: 'GET',
         success: function (data) {
-          console.log('obtained wikipedia data:', data);
           // give API data to getSavedUrls, just to pass it on to loadResults later
-          console.log('calling getSavedUrls(data, source)');
           getSavedUrls(data, source);
         },
         error: function (err) {
@@ -59,9 +54,8 @@ $(document).ready(function () {
         }
       });
 
-      // NEW YORK TIMES
+      // NEW YORK TIMES API CALL
     } else if (source === 'nyt') {
-      console.log('inside getJSON(), source = nyt');
       url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
       url += '?' + $.param({
         'api-key': '1a6e15371cf94b97a62802a17d365145',
@@ -75,16 +69,14 @@ $(document).ready(function () {
         method: 'GET',
         success: function (data) {
           getSavedUrls(data, source);
-          console.log(data);
         },
         error: function (err) {
           throw err;
         }
       });
 
-      // THE GUARDIAN
+      // THE GUARDIAN API CALL
     } else if (source === 'guardian') {
-      console.log('inside getJSON(), source = guardian');
       url = 'http://content.guardianapis.com/search';
       url += '?' + $.param({
         'api-key': 'e8eb4ddb-47ce-4400-9edc-42c41e3f2a2f',
@@ -99,7 +91,6 @@ $(document).ready(function () {
         method: 'GET',
         success: function (data) {
           getSavedUrls(data, source);
-          console.log(data);
         },
         error: function (err) {
           throw err;
@@ -108,28 +99,23 @@ $(document).ready(function () {
     }
   }
 
-  // GET '/users/id/stars' to obtain currentUser's list of saved urls
-  // apiData param corresponds to data from getJSON()
+  // request currentUser's list of saved urls from backend
+  // apiData param carries data from getJSON()
   // source param corresponds to api source (eg. wikipedia)
   function getSavedUrls (apiData, source) {
-    console.log('inside getSavedUrls');
     $.ajax({
       url: '/getstars',
       type: 'GET',
       success: function (data) { // data = savedUrlsArr
-        // hand everything to loadResults to append to page
         // server returns error if user is not logged in
-        console.log('data inside getSavedUrls:', data);
-        if (data.status !== 'error') {
-          console.log('data.status inside getSavedUrls - ', data.status);
-          console.log('previously starred array from server:', data);
-          console.log('calling loadResults(apidata, source, data)');
+        if (data.status !== 'error') { // logged in
           loadResults(apiData, source, data);
-        } else {
-          console.log('server returned with no previously stored array bc user not signed in');
-          console.log('calling loadResults(apidata, source)');
+        } else { // not logged in
           loadResults(apiData, source);
         }
+      },
+      error: function (err) {
+        throw err;
       }
     });
   }
@@ -139,24 +125,22 @@ $(document).ready(function () {
   // source = api source (eg. wikipedia, nyt, guardian)
   // savedUrlsArr = arr containing all of currentUser's savedUrls
   function loadResults (data, source, savedUrlsArr) {
-    console.log('inside loadResults()');
-    console.log('params passed in here are... data:', data, ' source:', source, ' savedUrlsArr:', savedUrlsArr);
     var sourceId = '#' + source;
-    console.log('sourceId:', sourceId);
 
     // remove throbber
     $(sourceId + ' i').fadeOut();
-
     // remove previous search results
     $(sourceId + ' .row').remove(); // every result card
     $(sourceId + ' p').remove(); // 'show x more results...'
 
+    // common elements to be created below
     var title = '';
     var excerpt = '';
     var url = '';
 
     var numOfResults = '';
     var numOfCards = '';
+    // CONFIGURATION for each API integration
     if (source === 'wikipedia') {
       numOfResults = data[1].length;
     } else if (source === 'nyt') {
@@ -164,42 +148,42 @@ $(document).ready(function () {
     } else if (source === 'guardian') {
       numOfResults = data.response.results.length;
     }
-    // number of results displayed filter
+
+    // limit results displayed based on user's max input
     if (numOfResults >= RESULTS_LIMIT) {
       numOfCards = RESULTS_LIMIT;
     } else {
       numOfCards = numOfResults;
     }
 
-    // each loop creates and appends individual results to DOM
+    // each loop creates and appends a result card to DOM
     for (var i = 0; i < numOfCards; i++) {
+      // CONFIGURATION for each API integration
       // WIKIPEDIA
       if (source === 'wikipedia') {
-        title = $('<h4>').text(data[1][i]);
+        title = $('<h3>').text(data[1][i]);
         excerpt = $('<p>').text(data[2][i]);
         url = data[3][i];
 
         // NEW YORK TIMES
       } else if (source === 'nyt') {
-        title = $('<h4>').text(data.response.docs[i].headline.main);
+        title = $('<h3>').text(data.response.docs[i].headline.main);
         excerpt = $('<p>').text(data.response.docs[i].snippet);
         url = data.response.docs[i].web_url;
 
         // THE GUARDIAN
       } else if (source === 'guardian') {
-        title = $('<h4>').text(data.response.results[i].webTitle);
+        title = $('<h3>').text(data.response.results[i].webTitle);
         excerpt = $('<p>').text('no excerpt available');
         url = data.response.results[i].webUrl;
-        console.log('guardian...', title, url);
       }
 
       // Note: No need to amend from here onwards - all works with various APIs
       // create html elements before appending to page
-      // elements for results content
       var row = $('<div>').addClass('row');
       var col = $('<div>').addClass('col-sm-12 result-card');
 
-      // when clicked launches Modal with relevant iframe
+      // click to launch BS Modal with relevant iframe
       var a = $('<a>').attr({
         'url': url, // hidden data, value is set as iframe 'src' when modal is triggered
         'data-toggle': 'modal',
@@ -217,13 +201,14 @@ $(document).ready(function () {
       }).addClass('form-control');
       var inputGroupBtns = $('<span>').addClass('input-group-btn');
 
-      // --- create and modify STAR button ---
+      // --- create and modify star button (save url to backend) ---
       var starBtn = $('<button>').attr({
         'type': 'button',
         'url': url
       }).addClass('btn btn-default star-btn');
       var starGlyphicon = '';
-      // use the correct star-empty / star glyph based on user's previous star history
+
+      // check if user has saved url before
       if (isSavedBefore(url, savedUrlsArr)) {
         starGlyphicon = $('<span>').addClass('glyphicon glyphicon-star');
         starBtn.addClass('starred'); // indicate to frontend that it's starred
@@ -253,21 +238,14 @@ $(document).ready(function () {
 
       // APPEND ALL THE ABOVE TO PAGE
       a.append(title, excerpt);
-
       inputGroupBtns.append(copyBtn, globeBtn, starBtn);
       inputGroup.append(input, inputGroupBtns);
       col.append(a, inputGroup);
       row.append(col);
+
       // append card to page
       $(sourceId).append(row);
     } // -- end for loop --
-
-    // // display 'show x more results...' if applicable
-    // if (numOfResults > RESULTS_LIMIT) {
-    //   var moreResults = numOfResults - RESULTS_LIMIT;
-    //   var hidden = $('<p>').text('show ' + moreResults + ' more results...');
-    //   $(sourceId).append(hidden);
-    // }
 
     // ============= Star Buttons click handler =============
     $('.star-btn').on('click', function (ev) {
@@ -275,7 +253,6 @@ $(document).ready(function () {
       // url is obtained from 'url' attr of <a>
       var elem = $(this); // element handle
       var urlStr = $(elem).attr('url'); // string value
-      console.log('ev', ev);
 
       if (!elem.hasClass('starred')) {
         // format: updateSavedUrls(method, route, data)
@@ -301,7 +278,7 @@ $(document).ready(function () {
 
   // Send AJAX POST requests to own server
   function updateSavedUrls (action, route, urlToUpdate) {
-    // action: 'create' or 'delete' - used in node backend
+    // action: 'create' or 'delete' - backend configured to these values
     $.ajax({
       type: 'POST',
       url: route,
@@ -310,7 +287,6 @@ $(document).ready(function () {
         action: action
       },
       success: function (data) {
-        console.log('data from server received:', data);
         var option = '';
         if (action === 'create' && data.status !== 'error') {
           option = 'star';
@@ -319,16 +295,14 @@ $(document).ready(function () {
         }
         updateStarIcon(urlToUpdate, option, data);
       },
-      error: function (xhr, err) {
-        handleError(xhr, err, urlToUpdate); // urlToUpdate identifies which star-btn
-      } // success implicitly handled by handleError function
+      error: function (err) {
+        throw err;
+      }
     });
   }
 
   // options: 'star', 'unstar'
   function updateStarIcon (url, option, data) {
-    console.log('inside updateStarIcon function');
-    console.log('data:', data);
     var thatStarBtn = '';
     var starGlyph = '';
 
@@ -339,9 +313,7 @@ $(document).ready(function () {
       if (option === 'star') {
         // remove 'star-btn' class (identifier)
         thatStarBtn = '.star-btn[url|="' + url + '"]';
-        console.log('thatStarBtn before:', $(thatStarBtn));
         $(thatStarBtn).addClass('starred');
-        console.log('thatStarBtn after:', $(thatStarBtn));
         // change star glyphicon to star-empty
         starGlyph = $(thatStarBtn).children()[0];
         $(starGlyph).addClass('glyphicon-star').removeClass('glyphicon-star-empty');
@@ -350,30 +322,12 @@ $(document).ready(function () {
       } else if (option === 'unstar') {
         // remove 'star-btn' class (identifier)
         thatStarBtn = '.star-btn[url|="' + url + '"]';
-        console.log('thatStarBtn before:', $(thatStarBtn));
         $(thatStarBtn).removeClass('starred');
-        console.log('thatStarBtn after:', $(thatStarBtn));
         // change star glyphicon to star-empty
         starGlyph = $(thatStarBtn).children()[0];
         $(starGlyph).addClass('glyphicon-star-empty').removeClass('glyphicon-star');
       }
     }
-  }
-
-  // handle errors from updateSavedUrls() function
-  function handleError (xhr, err, url) {
-    // print error message to top of page
-    $('#user-msg').text(err + ' when saving ' + url + ' - try again later');
-    console.log('handling error...');
-
-    // remove 'star-btn' class (identifier)
-    var thatStarBtn = '.star-btn[url|="' + url + '"]';
-    console.log('thatStarBtn before:', $(thatStarBtn));
-    $(thatStarBtn).removeClass('starred');
-    console.log('thatStarBtn after:', $(thatStarBtn));
-    // change star glyphicon to star-empty
-    var starGlyph = $(thatStarBtn).children()[0];
-    $(starGlyph).addClass('glyphicon-star-empty').removeClass('glyphicon-star');
   }
 
   // checks if a particular url is contained in user's savedUrlsArr
@@ -393,27 +347,11 @@ $(document).ready(function () {
   // project: https://clipboardjs.com/ - click button to copy text
   var clipboard = new Clipboard('.clipboard');
 
-  // ================= Frontend form validation logic ==================
-  // inputs to be validated have .validate class
-
-  // $('.validate').on('focusout', validateInput);
-  //
-  // function validateInput (ev) {
-  //   var input = $(this);
-  //   var span = $('<span>');
-  //
-  //   console.log(span);
-  //
-  //   input.prepend(span);
-  //   console.log('ev', ev);
-  //   console.log('$(this):', input);
-  //   console.log('$(this).siblings():', input.siblings());
-  //   console.log('$(this).siblings()[0]:', input.siblings()[0]);
-  //   console.log('$(this).siblings().prevObject:', input.siblings().prevObject);
-  //   console.log('ev.target', ev.target);
+  // =========== CODE DUMP (IGNORE) ===========
+  // FUTURE USE - FIX NON-ROOT SEARCH SUBMITS
+  // var currentPage = $(location).attr('href');
+  // if (currentPage !== 'http://localhost:3000') {
+  //   console.log('current page IS NOT ROOT');
+  //   window.location = "/?string=" + SEARCH_STR;
   // }
-
-  // $('#myModal').on('show.bs.modal', function () {
-  //   $('.modal-content').css('height', $(window).height() * 0.9);
-  // });
 }); // end document ready function

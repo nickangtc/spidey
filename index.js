@@ -53,10 +53,9 @@ app.use('/', require('./controllers/auth'));
 app.get('/', function (req, res) {
   console.log('GET / request received');
   res.render('index');
-  // if (req.user) {
-  //   res.render('index', { user: req.user });
-  // } else if (req.user === undefined) {
-  //   res.render('index', {user: ''});
+  // if (req.query.string) {
+  //   console.log('REQ.PARAMS.STRING = ', req.query.string);
+  //   res.render('index', { search: req.query.string });
   // }
 });
 

@@ -51,9 +51,6 @@ select {
 .copy-url {
   width: 60%;
 }
-.centralise {
-  margin: 0 auto;
-}
 
 /* ==== MISCELLANEOUS CSS ==== */
 /* offset fixed navbar height for in-page anchor tag jumps */
