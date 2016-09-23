@@ -1,9 +1,12 @@
 <% if (alerts.error) { %>
   <% alerts.error.forEach(function(msg) { %>
-    <div class="container-fluid alert alert-danger">
+    <div class="container-fluid alert alert-danger alert-dismissible">
       <div class="row">
         <div class="col-sm-12 text-center">
       <%= msg %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
         </div>
       </div>
     </div>
@@ -15,6 +18,9 @@
       <div class="row">
         <div class="col-sm-12 text-center">
       <%= msg %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
         </div>
       </div>
     </div>

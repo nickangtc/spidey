@@ -8,6 +8,8 @@ var methodOverride = require('method-override');
 var db = require('./models');
 var flash = require('connect-flash');
 var isLoggedIn = require('./middleware/isLoggedIn');
+var dotenv = require('dotenv');
+dotenv.load();
 
 /* NOTE:
 * - this project's routes have heavy dependency on req.user object
