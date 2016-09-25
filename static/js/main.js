@@ -245,23 +245,24 @@ $(document).ready(function () {
 
       // append card to page
       $(sourceId).append(row);
+
+      // ============= Star Buttons click handler =============
+      $(starBtn).on('click', function (ev) {
+        // debugger;
+        // url is obtained from 'url' attr of <a>
+        var elem = $(this); // element handle
+        var urlStr = $(elem).attr('url'); // string value
+
+        if (!elem.hasClass('starred')) {
+          // format: updateSavedUrls(method, route, data)
+          updateSavedUrls('create', '/stars/update', urlStr);
+        } else if (elem.hasClass('starred')) {
+          // ajax DELETE to destroy matching entry in 'star' table in db
+          updateSavedUrls('delete', '/stars/update', urlStr);
+        }
+      });
     } // -- end for loop --
 
-    // ============= Star Buttons click handler =============
-    $('.star-btn').on('click', function (ev) {
-      // debugger;
-      // url is obtained from 'url' attr of <a>
-      var elem = $(this); // element handle
-      var urlStr = $(elem).attr('url'); // string value
-
-      if (!elem.hasClass('starred')) {
-        // format: updateSavedUrls(method, route, data)
-        updateSavedUrls('create', '/stars/update', urlStr);
-      } else if (elem.hasClass('starred')) {
-        // ajax DELETE to destroy matching entry in 'star' table in db
-        updateSavedUrls('delete', '/stars/update', urlStr);
-      }
-    });
 
     // ============= Modal click handler ==============
     // index.html contains modal with embedded iframe
