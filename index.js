@@ -18,6 +18,7 @@ dotenv.load();
 
 // ============= MIDDLE WARE + CONFIGURATIONS ==============
 
+app.use(require('morgan')('dev'));
 app.use(express.static(__dirname + '/static'));
 app.set('view engine', 'ejs');
 
